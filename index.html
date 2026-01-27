@@ -14,7 +14,7 @@
 
         .content { padding: 25px; }
 
-        /* Tabs for Student vs Alumni */
+        /* Tabs */
         .category-selector { display: flex; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
         .cat-btn { flex: 1; padding: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .cat-btn.active { background: #0d47a1; color: white; }
@@ -33,12 +33,12 @@
         .btn-submit { width: 100%; padding: 14px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-submit:hover { background: #1565c0; }
 
-        #successMessage { display: none; text-align: center; }
-        .action-btn { display: block; width: 100%; padding: 12px; margin-top: 10px; text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; box-sizing: border-box; }
-        .pay-btn { background: #ff9800; color: white; }
-        .wa-btn { background: #25D366; color: white; }
-        
-        #loading { display: none; text-align: center; color: #666; padding: 20px; }
+        /* Info Alert */
+        .info-alert { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; }
+
+        #loading { display: none; text-align: center; padding: 40px 20px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0d47a1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -50,54 +50,54 @@
     </div>
 
     <div class="content">
-        <div class="category-selector">
-            <button type="button" class="cat-btn active" onclick="setCategory('Student')" id="btnStudent">Student</button>
-            <button type="button" class="cat-btn" onclick="setCategory('Alumni')" id="btnAlumni">Alumni</button>
-        </div>
 
-        <div class="price-box" id="priceDisplay">Loading...</div>
-
-        <form id="regForm" name="submit-to-google-sheet">
-            <input type="hidden" name="category" id="categoryInput" value="Student">
-            <input type="hidden" name="total_price" id="totalPriceInput">
-            
-            <input type="hidden" name="pax" value="1">
-
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" name="name" required placeholder="Enter full name">
+        <div id="registrationSection">
+            <div class="category-selector">
+                <button type="button" class="cat-btn active" onclick="setCategory('Student')" id="btnStudent">Student</button>
+                <button type="button" class="cat-btn" onclick="setCategory('Alumni')" id="btnAlumni">Alumni</button>
             </div>
 
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" name="phone" required placeholder="012-3456789">
+            <div class="price-box" id="priceDisplay">Loading...</div>
+
+            <div class="info-alert">
+                📢 <strong>Note:</strong> The WhatsApp Group link will be sent to your <strong>email</strong> immediately after payment.
             </div>
 
-            <div class="form-group" id="matrixGroup">
-                <label>Matrix Number</label>
-                <input type="text" name="matrix_no" id="matrixInput" required placeholder="e.g. S2180000 / 23002000">
-            </div>
+            <form id="regForm" name="submit-to-google-sheet">
+                <input type="hidden" name="category" id="categoryInput" value="Student">
+                <input type="hidden" name="total_price" id="totalPriceInput">
+                <input type="hidden" name="pax" value="1">
 
-            <div class="form-group">
-                <label>Registration Type</label>
-                <div class="static-field">
-                    👤 Individual (1 Pax)
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required placeholder="Enter full name">
                 </div>
-                <p style="font-size:12px; color:#888; margin-top:4px;">*To register for a friend, please submit a separate form.</p>
-            </div>
 
-            <button type="submit" class="btn-submit">Register Now</button>
-        </form>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required placeholder="012-3456789">
+                </div>
 
-        <div id="loading">Saving data...</div>
+                <div class="form-group" id="matrixGroup">
+                    <label>Matrix Number</label>
+                    <input type="text" name="matrix_no" id="matrixInput" required placeholder="e.g. S2180000 / 23002000">
+                </div>
 
-        <div id="successMessage">
-            <h2 style="color:green">Registration Success!</h2>
-            <p>Please complete your payment below.</p>
-            <a id="payLink" href="#" target="_blank" class="action-btn pay-btn">Pay Now</a>
-            
-            <a id="waLink" href="#" target="_blank" class="action-btn wa-btn">Join WhatsApp Group</a>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="Important for receipt">
+                </div>
+
+                <button type="submit" class="btn-submit">Proceed to Payment</button>
+            </form>
         </div>
+
+        <div id="loading">
+            <div class="spinner"></div>
+            <h3>Redirecting to Payment...</h3>
+            <p>Please do not close this window.</p>
+        </div>
+
     </div>
 </div>
 
@@ -109,41 +109,34 @@
     // Google Sheet Script URL
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygw3YSuC_CWSwaaDPCGb9I_eq86wBpzIiEoQqAPNsLVYrEd0OrvBVf85XJcpbB5gj3Tg/exec';
     
-    // WhatsApp Group Links (NEW: TWO LINKS)
-    const WA_GROUP_STUDENT = 'https://chat.whatsapp.com/PASTE_STUDENT_LINK_HERE';
-    const WA_GROUP_ALUMNI  = 'https://chat.whatsapp.com/PASTE_ALUMNI_LINK_HERE';
-    
     // ToyyibPay Bill Links
     const LINK_STUDENT_EARLY = 'https://toyyibpay.com/Student-Early-Bird';
     const LINK_STUDENT_NORMAL = 'https://toyyibpay.com/Student-Standard';
     const LINK_ALUMNI = 'https://toyyibpay.com/Alumni-Registration';
 
-    // Promo Date
     const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30, 2026
     // ===============================================
 
     let currentCategory = 'Student';
     let unitPrice = 100;
     let finalPayLink = '';
-    let finalWaLink = '';
 
     function setCategory(cat) {
         currentCategory = cat;
         document.getElementById('categoryInput').value = cat;
         
-        // Toggle UI Buttons
+        // Toggle UI
         document.getElementById('btnStudent').className = cat === 'Student' ? 'cat-btn active' : 'cat-btn';
         document.getElementById('btnAlumni').className = cat === 'Alumni' ? 'cat-btn active' : 'cat-btn';
 
-        // Show/Hide Matrix Input
         const matrixInput = document.getElementById('matrixInput');
         const matrixGroup = document.getElementById('matrixGroup');
         if (cat === 'Alumni') {
             matrixGroup.style.display = 'none';
-            matrixInput.removeAttribute('required'); // Alumni don't need matrix
+            matrixInput.removeAttribute('required');
         } else {
             matrixGroup.style.display = 'block';
-            matrixInput.setAttribute('required', 'true'); // Students need matrix
+            matrixInput.setAttribute('required', 'true');
         }
         updatePrice();
     }
@@ -153,9 +146,6 @@
         const display = document.getElementById('priceDisplay');
 
         if (currentCategory === 'Student') {
-            // Student Logic
-            finalWaLink = WA_GROUP_STUDENT; // Set Student WA Link
-
             if (today <= EARLY_BIRD_END_DATE) {
                 unitPrice = 90;
                 finalPayLink = LINK_STUDENT_EARLY;
@@ -170,48 +160,41 @@
                 display.innerHTML = `<span class="price-tag">RM100</span><p style="font-size:12px; margin:5px 0 0;">Standard Student Rate</p>`;
             }
         } else {
-            // Alumni Logic
             unitPrice = 150;
             finalPayLink = LINK_ALUMNI;
-            finalWaLink = WA_GROUP_ALUMNI; // Set Alumni WA Link
-
             display.innerHTML = `<span class="price-tag">RM150</span><p style="font-size:12px; margin:5px 0 0;">Alumni / VIP Rate</p>`;
         }
-
-        // Calculate Total
         document.getElementById('totalPriceInput').value = unitPrice;
-        
-        // Update Buttons
-        document.getElementById('payLink').href = finalPayLink;
-        document.getElementById('waLink').href = finalWaLink;
     }
 
     // Initialize
     updatePrice();
 
-    // Submission Logic
+    // --- FORM SUBMISSION ---
     const form = document.forms['submit-to-google-sheet'];
     const loading = document.getElementById('loading');
-    const successMsg = document.getElementById('successMessage');
+    const regSection = document.getElementById('registrationSection');
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        loading.style.display = 'block';
-        form.style.display = 'none';
         
+        // 1. Show Loading UI
+        regSection.style.display = 'none';
+        loading.style.display = 'block';
+        
+        // 2. Save Data to Google Sheet
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => {
-                loading.style.display = 'none';
-                successMsg.style.display = 'block';
+                // 3. Redirect to ToyyibPay
+                window.location.href = finalPayLink;
             })
             .catch(error => {
-                alert("Error saving data!");
+                alert("Error saving data! Please try again.");
                 loading.style.display = 'none';
-                form.style.display = 'block';
+                regSection.style.display = 'block';
             });
     });
 </script>
 
 </body>
-
 </html>
