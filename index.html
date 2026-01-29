@@ -468,7 +468,7 @@
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => {
                 // Redirect to ToyyibPay
-                const finalUrl = `${priceData.payLink}?amount=${priceData.totalPrice}`;
+                const finalUrl = `${priceData.payLink}?amount=${priceData.totalPrice}&billAmount=${priceData.totalPrice}`;
                 window.location.href = finalUrl;
             })
             .catch(error => {
@@ -488,3 +488,4 @@
 
 </body>
 </html>
+
