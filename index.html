@@ -6,11 +6,15 @@
     <title>MAGS 2026 Registration</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 500px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        .container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
         
+        /* Updated Header */
         .header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 30px 20px; text-align: center; }
-        .header h1 { margin: 0; font-size: 26px; }
-        .header p { margin: 5px 0 0; opacity: 0.9; }
+        .header h1 { margin: 0 0 10px; font-size: 28px; letter-spacing: 1px; }
+        .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; }
+        .event-details strong { color: #ffeb3b; }
+        .map-btn { display: inline-block; background: white; color: #0d47a1; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px; margin-top: 5px; }
+        .map-btn:hover { background: #eee; }
 
         .content { padding: 25px; }
 
@@ -20,22 +24,21 @@
         .cat-btn.active { background: #0d47a1; color: white; }
 
         .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 15px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
-        .price-tag { font-size: 28px; font-weight: 800; color: #0d47a1; }
-        .old-price { text-decoration: line-through; color: #777; margin-right: 8px; }
-        .badge { background: #d32f2f; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; vertical-align: middle; }
+        .price-tag { font-size: 32px; font-weight: 800; color: #0d47a1; }
+        .per-pax { font-size: 14px; color: #555; }
+        .discount-badge { display: inline-block; background: #d32f2f; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-left: 5px; vertical-align: middle; }
 
+        .form-section { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; position: relative; }
+        .form-section-title { font-size: 14px; font-weight: bold; color: #777; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
         input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
         
-        .static-field { padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 6px; color: #555; }
-
         .btn-submit { width: 100%; padding: 14px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-submit:hover { background: #1565c0; }
 
-        /* Info Alert */
         .info-alert { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; }
-
         #loading { display: none; text-align: center; padding: 40px 20px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0d47a1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -46,47 +49,54 @@
 <div class="container">
     <div class="header">
         <h1>MAGS 2026</h1>
-        <p>Vivatel Hotel KL | 5 June 2026</p>
+        <div class="event-details">
+            <div>📅 <strong>Date:</strong> 5 June 2026</div>
+            <div>⏰ <strong>Time:</strong> 8:00 PM</div>
+            <div>📍 <strong>Location:</strong> Vivatel Hotel Kuala Lumpur</div>
+            <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Viva Mall, 85, Jln Loke Yew, Taman Miharja, 55200 KL</div>
+            <a href="https://maps.google.com/?q=Vivatel+Hotel+Kuala+Lumpur" target="_blank" class="map-btn">📍 Open in Google Maps</a>
+        </div>
     </div>
 
     <div class="content">
-
         <div id="registrationSection">
             <div class="category-selector">
                 <button type="button" class="cat-btn active" onclick="setCategory('Student')" id="btnStudent">Student</button>
                 <button type="button" class="cat-btn" onclick="setCategory('Alumni')" id="btnAlumni">Alumni</button>
             </div>
 
+            <div class="form-group">
+                <label>Number of Pax (Attendees)</label>
+                <select id="paxSelect" onchange="renderFormFields()">
+                    <option value="1">1 Pax (Individual)</option>
+                    <option value="2">2 Pax</option>
+                    <option value="3">3 Pax (Group)</option>
+                    <option value="4">4 Pax (Group)</option>
+                    <option value="5">5 Pax (Group)</option>
+                    <option value="6">6 Pax (Group)</option>
+                    <option value="7">7 Pax (Group)</option>
+                    <option value="8">8 Pax (Group)</option>
+                    <option value="9">9 Pax (Group)</option>
+                    <option value="10">10 Pax (Group)</option>
+                </select>
+            </div>
+
             <div class="price-box" id="priceDisplay">Loading...</div>
 
             <div class="info-alert">
-                📢 <strong>Note:</strong> The WhatsApp Group link will be sent to your <strong>email</strong> immediately after payment.
+                📢 <strong>Group Registration:</strong> Please fill in details for <strong>ALL</strong> attendees below. The payment receipt will be sent to the email of the <strong>first person (Lead)</strong>.
             </div>
 
-            <form id="regForm" name="submit-to-google-sheet">
-                <input type="hidden" name="category" id="categoryInput" value="Student">
-                <input type="hidden" name="total_price" id="totalPriceInput">
-                <input type="hidden" name="pax" value="1">
+            <form id="regForm">
+                <input type="hidden" name="category" id="hiddenCategory">
+                <input type="hidden" name="total_price" id="hiddenTotalPrice">
+                <input type="hidden" name="pax" id="hiddenPax">
+                <input type="hidden" name="name" id="finalName">
+                <input type="hidden" name="phone" id="finalPhone">
+                <input type="hidden" name="matrix_no" id="finalMatrix">
+                <input type="hidden" name="email" id="finalEmail">
 
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" name="name" required placeholder="Enter full name">
-                </div>
-
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" name="phone" required placeholder="012-3456789">
-                </div>
-
-                <div class="form-group" id="matrixGroup">
-                    <label>Matrix Number</label>
-                    <input type="text" name="matrix_no" id="matrixInput" required placeholder="e.g. S2180000 / 23002000">
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required placeholder="Important for receipt">
-                </div>
+                <div id="attendeesContainer"></div>
 
                 <button type="submit" class="btn-submit">Proceed to Payment</button>
             </form>
@@ -94,109 +104,188 @@
 
         <div id="loading">
             <div class="spinner"></div>
-            <h3>Redirecting to Payment...</h3>
-            <p>Please do not close this window.</p>
+            <h3>Processing Registration...</h3>
+            <p>Redirecting to secure payment...</p>
         </div>
-
     </div>
 </div>
 
 <script>
-    // ===============================================
-    // 1. PASTE YOUR LINKS HERE
-    // ===============================================
-    
-    // Google Sheet Script URL
+    // ================= CONFIGURATION =================
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygw3YSuC_CWSwaaDPCGb9I_eq86wBpzIiEoQqAPNsLVYrEd0OrvBVf85XJcpbB5gj3Tg/exec';
     
-    // ToyyibPay Bill Links
-    const LINK_STUDENT_EARLY = 'https://toyyibpay.com/Student-Early-Bird';
-    const LINK_STUDENT_NORMAL = 'https://toyyibpay.com/Student-Standard';
-    const LINK_ALUMNI = 'https://toyyibpay.com/Alumni-Registration';
+    // ToyyibPay Links (Ensure "Fix Amount" is set to NO in ToyyibPay!)
+    const LINK_STUDENT_EARLY = 'https://toyyibpay.com/Student-Early-Bird-MAGS-2026';
+    const LINK_STUDENT_NORMAL = 'https://toyyibpay.com/Student-Standard-MAGS-2026';
+    const LINK_ALUMNI = 'https://toyyibpay.com/Alumni-Registration-MAGS-2026';
 
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30, 2026
+    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // 30 May 2026
+    
+    // PRICING SETTINGS
+    const PRICES = {
+        STUDENT: { EARLY: 90, NORMAL: 100 },
+        STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, // RM5 Discount for groups
+        ALUMNI: { FIXED: 150 }
+    };
     // ===============================================
 
     let currentCategory = 'Student';
-    let unitPrice = 100;
-    let finalPayLink = '';
 
     function setCategory(cat) {
         currentCategory = cat;
-        document.getElementById('categoryInput').value = cat;
-        
-        // Toggle UI
+        // UI Updates
         document.getElementById('btnStudent').className = cat === 'Student' ? 'cat-btn active' : 'cat-btn';
         document.getElementById('btnAlumni').className = cat === 'Alumni' ? 'cat-btn active' : 'cat-btn';
+        
+        // Reset Pax to 1 when switching category
+        document.getElementById('paxSelect').value = "1";
+        
+        renderFormFields();
+    }
 
-        const matrixInput = document.getElementById('matrixInput');
-        const matrixGroup = document.getElementById('matrixGroup');
-        if (cat === 'Alumni') {
-            matrixGroup.style.display = 'none';
-            matrixInput.removeAttribute('required');
-        } else {
-            matrixGroup.style.display = 'block';
-            matrixInput.setAttribute('required', 'true');
+    function renderFormFields() {
+        const pax = parseInt(document.getElementById('paxSelect').value);
+        const container = document.getElementById('attendeesContainer');
+        container.innerHTML = ''; // Clear previous fields
+
+        for (let i = 1; i <= pax; i++) {
+            const isLead = (i === 1);
+            const title = isLead ? `Attendee #${i} (Group Lead)` : `Attendee #${i}`;
+            
+            let html = `
+            <div class="form-section">
+                <div class="form-section-title">${title}</div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="input-name" required placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="input-phone" required placeholder="012-3456789">
+                </div>`;
+
+            // Matrix Number (Only for Students)
+            if (currentCategory === 'Student') {
+                html += `
+                <div class="form-group">
+                    <label>Matrix Number</label>
+                    <input type="text" class="input-matrix" required placeholder="e.g. A24CS0001">
+                </div>`;
+            }
+
+            // Email (Only for Lead / Attendee #1)
+            if (isLead) {
+                html += `
+                <div class="form-group">
+                    <label>Email Address (For Receipt)</label>
+                    <input type="email" class="input-email" required placeholder="Required for receipt">
+                </div>`;
+            }
+
+            html += `</div>`; // Close section
+            container.insertAdjacentHTML('beforeend', html);
         }
         updatePrice();
     }
 
     function updatePrice() {
+        const pax = parseInt(document.getElementById('paxSelect').value);
         const today = new Date();
         const display = document.getElementById('priceDisplay');
+        let unitPrice = 0;
+        let totalPrice = 0;
+        let payLink = '';
+        let isEarlyBird = today <= EARLY_BIRD_END_DATE;
 
         if (currentCategory === 'Student') {
-            if (today <= EARLY_BIRD_END_DATE) {
-                unitPrice = 90;
-                finalPayLink = LINK_STUDENT_EARLY;
+            // Determine Base Price
+            let basePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
+            let groupPrice = isEarlyBird ? PRICES.STUDENT_GROUP.EARLY : PRICES.STUDENT_GROUP.NORMAL;
+            
+            // Check for Group Discount
+            if (pax >= PRICES.STUDENT_GROUP.MIN_PAX) {
+                unitPrice = groupPrice;
                 display.innerHTML = `
-                    <span class="old-price">RM100</span>
-                    <span class="price-tag">RM90</span>
-                    <span class="badge">EARLY BIRD</span>
-                    <p style="font-size:12px; margin:5px 0 0;">Valid until 30 May 2026</p>`;
+                    <span class="price-tag">RM${unitPrice * pax}</span>
+                    <div class="per-pax">RM${unitPrice} x ${pax} pax <span class="discount-badge">GROUP SAVE</span></div>
+                    ${isEarlyBird ? '<span class="badge" style="margin-top:5px">EARLY BIRD</span>' : ''}`;
             } else {
-                unitPrice = 100;
-                finalPayLink = LINK_STUDENT_NORMAL;
-                display.innerHTML = `<span class="price-tag">RM100</span><p style="font-size:12px; margin:5px 0 0;">Standard Student Rate</p>`;
+                unitPrice = basePrice;
+                display.innerHTML = `
+                    <span class="price-tag">RM${unitPrice * pax}</span>
+                    <div class="per-pax">RM${unitPrice} x ${pax} pax</div>
+                    ${isEarlyBird ? '<span class="badge" style="margin-top:5px">EARLY BIRD</span>' : ''}`;
             }
+            payLink = isEarlyBird ? LINK_STUDENT_EARLY : LINK_STUDENT_NORMAL;
+
         } else {
-            unitPrice = 150;
-            finalPayLink = LINK_ALUMNI;
-            display.innerHTML = `<span class="price-tag">RM150</span><p style="font-size:12px; margin:5px 0 0;">Alumni / VIP Rate</p>`;
+            // Alumni
+            unitPrice = PRICES.ALUMNI.FIXED;
+            payLink = LINK_ALUMNI;
+            display.innerHTML = `
+                <span class="price-tag">RM${unitPrice * pax}</span>
+                <div class="per-pax">RM${unitPrice} x ${pax} pax</div>
+                <p style="font-size:12px; margin:5px 0 0;">Alumni Rate</p>`;
         }
-        document.getElementById('totalPriceInput').value = unitPrice;
+
+        totalPrice = unitPrice * pax;
+
+        // Update Hidden Inputs
+        document.getElementById('hiddenTotalPrice').value = totalPrice;
+        document.getElementById('hiddenPax').value = pax;
+        document.getElementById('hiddenCategory').value = currentCategory;
+        
+        return { payLink, totalPrice };
     }
 
     // Initialize
-    updatePrice();
+    renderFormFields();
 
-    // --- FORM SUBMISSION ---
-    const form = document.forms['submit-to-google-sheet'];
-    const loading = document.getElementById('loading');
-    const regSection = document.getElementById('registrationSection');
-
+    // --- SUBMISSION LOGIC ---
+    const form = document.getElementById('regForm');
+    
     form.addEventListener('submit', e => {
         e.preventDefault();
         
-        // 1. Show Loading UI
-        regSection.style.display = 'none';
-        loading.style.display = 'block';
+        const priceData = updatePrice(); // Get latest price and link
         
-        // 2. Save Data to Google Sheet
+        // 1. Consolidate Data from all fields
+        const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value).join('\n');
+        const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
+        
+        // Handle optional Matrix
+        const matrices = currentCategory === 'Student' 
+            ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') 
+            : '-';
+            
+        // Email is only entered once (by lead)
+        const email = document.querySelector('.input-email').value;
+
+        // Fill hidden inputs
+        document.getElementById('finalName').value = names;
+        document.getElementById('finalPhone').value = phones;
+        document.getElementById('finalMatrix').value = matrices;
+        document.getElementById('finalEmail').value = email;
+
+        // 2. Show Loading
+        document.getElementById('registrationSection').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+
+        // 3. Send to Google Sheet
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => {
-                // 3. Redirect to ToyyibPay
-                window.location.href = finalPayLink;
+                // 4. Redirect to ToyyibPay with custom Amount
+                // We add ?amount=RM to the link to override the bill amount (Requires Fix Amount = No)
+                const finalUrl = `${priceData.payLink}?amount=${priceData.totalPrice}`;
+                window.location.href = finalUrl;
             })
             .catch(error => {
-                alert("Error saving data! Please try again.");
-                loading.style.display = 'none';
-                regSection.style.display = 'block';
+                alert("Connection Error. Please try again.");
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('registrationSection').style.display = 'block';
             });
     });
 </script>
 
 </body>
 </html>
-
-
