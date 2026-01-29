@@ -6,9 +6,9 @@
     <title>MAGS 2026 Registration</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        .container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
         
-        /* Updated Header */
+        /* Header */
         .header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 30px 20px; text-align: center; }
         .header h1 { margin: 0 0 10px; font-size: 28px; letter-spacing: 1px; }
         .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; }
@@ -23,12 +23,12 @@
         .cat-btn { flex: 1; padding: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .cat-btn.active { background: #0d47a1; color: white; }
 
-        /* Price Box Updates */
+        /* Price Box */
         .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; position: relative; }
         .price-tag { font-size: 32px; font-weight: 800; color: #0d47a1; }
-        .per-pax { font-size: 14px; color: #555; margin-top: 5px; }
+        .per-pax { font-size: 14px; color: #555; margin-top: 5px; display: block; }
         
-        /* New Promotion Styles */
+        /* Promotion Styles */
         .old-price { text-decoration: line-through; color: #888; font-size: 18px; margin-right: 5px; font-weight: normal; }
         
         .promo-badge {
@@ -46,14 +46,17 @@
             animation: pulse 2s infinite;
         }
 
+        /* Updated Group Save Tag - Centered Below */
         .promo-tag-group {
+            display: block; /* Make it block level to sit on own line */
+            width: fit-content;
+            margin: 8px auto 0 auto; /* Center it */
             background: #2e7d32; 
             color: white; 
-            padding: 2px 8px; 
+            padding: 4px 10px; 
             border-radius: 4px; 
-            font-size: 11px; 
-            vertical-align: middle; 
-            margin-left: 5px;
+            font-size: 12px; 
+            font-weight: bold;
         }
 
         @keyframes pulse {
@@ -73,9 +76,52 @@
         .btn-submit:hover { background: #1565c0; }
 
         .info-alert { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; }
+        
         #loading { display: none; text-align: center; padding: 40px 20px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0d47a1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- MODAL STYLES (New) --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: left;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header { border-bottom: 1px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #0d47a1; }
+        
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .summary-label { color: #666; font-weight: 600; }
+        .summary-value { font-weight: bold; color: #333; text-align: right; }
+        
+        .summary-list { background: #f9f9f9; padding: 10px; border-radius: 6px; margin: 15px 0; max-height: 200px; overflow-y: auto; font-size: 13px; border: 1px solid #eee; }
+        .summary-list-item { border-bottom: 1px solid #ddd; padding: 8px 0; }
+        .summary-list-item:last-child { border-bottom: none; }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-confirm { flex: 2; background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-cancel { flex: 1; background: #e0e0e0; color: #333; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        
     </style>
 </head>
 <body>
@@ -133,11 +179,43 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-header">Confirm Registration</div>
+        
+        <div class="summary-row">
+            <span class="summary-label">Category:</span>
+            <span class="summary-value" id="modalCategory"></span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">Total Pax:</span>
+            <span class="summary-value" id="modalPax"></span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">Total Price:</span>
+            <span class="summary-value" style="color: #d32f2f; font-size: 18px;" id="modalPrice"></span>
+        </div>
+
+        <div style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #555;">Attendee Details:</div>
+        <div class="summary-list" id="modalAttendeeList">
+            </div>
+
+        <div style="font-size: 12px; color: #777; margin-top: 10px; font-style: italic;">
+            Please ensure all details are correct. Receipt will be sent to the Lead email.
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal()">Edit</button>
+            <button type="button" class="btn-confirm" onclick="processPayment()">Confirm & Pay</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // ================= CONFIGURATION =================
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygw3YSuC_CWSwaaDPCGb9I_eq86wBpzIiEoQqAPNsLVYrEd0OrvBVf85XJcpbB5gj3Tg/exec';
     
-    // ToyyibPay Links (Ensure "Fix Amount" is set to NO in ToyyibPay!)
+    // ToyyibPay Links
     const LINK_STUDENT_EARLY = 'https://toyyibpay.com/Student-Early-Bird-MAGS-2026';
     const LINK_STUDENT_NORMAL = 'https://toyyibpay.com/Student-Standard-MAGS-2026';
     const LINK_ALUMNI = 'https://toyyibpay.com/Alumni-Registration-MAGS-2026';
@@ -165,15 +243,12 @@
         
         // Update the Pax Dropdown options based on category
         updatePaxDropdown(cat);
-        
         renderFormFields();
     }
 
     function updatePaxDropdown(category) {
         const select = document.getElementById('paxSelect');
         select.innerHTML = ''; // Clear existing
-
-        // Set Max Pax: Student = 10, Alumni = 2
         let maxPax = (category === 'Student') ? 10 : 2;
 
         for (let i = 1; i <= maxPax; i++) {
@@ -188,14 +263,13 @@
             }
             select.appendChild(option);
         }
-        // Reset selection to 1 whenever category changes
         select.value = "1";
     }
 
     function renderFormFields() {
         const pax = parseInt(document.getElementById('paxSelect').value);
         const container = document.getElementById('attendeesContainer');
-        container.innerHTML = ''; // Clear previous fields
+        container.innerHTML = ''; 
 
         // Update Alert Text visibility
         const alertBox = document.getElementById('groupAlert');
@@ -217,16 +291,14 @@
                     <input type="tel" class="input-phone" required placeholder="012-3456789">
                 </div>`;
 
-            // Matrix Number (Only for Students)
             if (currentCategory === 'Student') {
                 html += `
                 <div class="form-group">
                     <label>Matrix Number</label>
-                    <input type="text" class="input-matrix" required placeholder="e.g. S2180000 / 23002000">
+                    <input type="text" class="input-matrix" required placeholder="e.g. S2180000">
                 </div>`;
             }
 
-            // Email (Only for Lead / Attendee #1)
             if (isLead) {
                 html += `
                 <div class="form-group">
@@ -235,7 +307,7 @@
                 </div>`;
             }
 
-            html += `</div>`; // Close section
+            html += `</div>`; 
             container.insertAdjacentHTML('beforeend', html);
         }
         updatePrice();
@@ -251,12 +323,10 @@
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
 
         if (currentCategory === 'Student') {
-            // Determine Base Price
             let basePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
             let groupPrice = isEarlyBird ? PRICES.STUDENT_GROUP.EARLY : PRICES.STUDENT_GROUP.NORMAL;
             let normalPriceForDisplay = PRICES.STUDENT.NORMAL;
             
-            // Check for Group Discount
             if (pax >= PRICES.STUDENT_GROUP.MIN_PAX) {
                 unitPrice = groupPrice;
                 display.innerHTML = `
@@ -264,10 +334,10 @@
                     ${isEarlyBird ? '<span class="promo-badge">🔥 Early Bird</span>' : ''}
                     <div class="per-pax">
                         ${isEarlyBird ? `<span class="old-price">RM${normalPriceForDisplay * pax}</span>` : ''}
-                        RM${unitPrice} x ${pax} pax <span class="promo-tag-group">GROUP SAVE</span>
-                    </div>`;
+                        RM${unitPrice} x ${pax} pax
+                    </div>
+                    <div class="promo-tag-group">GROUP SAVE</div>`;
             } else {
-                // Individual
                 unitPrice = basePrice;
                 display.innerHTML = `
                     <span class="price-tag">RM${unitPrice * pax}</span>
@@ -280,7 +350,6 @@
             payLink = isEarlyBird ? LINK_STUDENT_EARLY : LINK_STUDENT_NORMAL;
 
         } else {
-            // Alumni
             unitPrice = PRICES.ALUMNI.FIXED;
             payLink = LINK_ALUMNI;
             display.innerHTML = `
@@ -299,38 +368,82 @@
         return { payLink, totalPrice };
     }
 
-    // --- SUBMISSION LOGIC ---
-    const form = document.getElementById('regForm');
+    // --- MODAL & SUBMISSION LOGIC ---
     
+    const form = document.getElementById('regForm');
+    const modal = document.getElementById('confirmModal');
+
+    // 1. Intercept Submit - Show Modal
     form.addEventListener('submit', e => {
         e.preventDefault();
         
-        const priceData = updatePrice(); 
+        const priceData = updatePrice();
+        const pax = document.getElementById('paxSelect').value;
         
-        // 1. Consolidate Data from all fields
+        // Populate Modal Data
+        document.getElementById('modalCategory').innerText = currentCategory;
+        document.getElementById('modalPax').innerText = pax + " Pax";
+        document.getElementById('modalPrice').innerText = "RM" + priceData.totalPrice;
+
+        // Generate Attendee Summary for Modal
+        const names = document.querySelectorAll('.input-name');
+        const phones = document.querySelectorAll('.input-phone');
+        const matrices = document.querySelectorAll('.input-matrix'); // might be empty if alumni
+        const email = document.querySelector('.input-email').value;
+
+        let listHtml = '';
+        names.forEach((nameInput, index) => {
+            let info = `<strong>${index + 1}. ${nameInput.value}</strong><br>
+                        📞 ${phones[index].value}`;
+            
+            if(currentCategory === 'Student' && matrices[index]) {
+                info += `<br>🆔 ${matrices[index].value}`;
+            }
+            if(index === 0) {
+                info += `<br>📧 ${email} (Receipt)`;
+            }
+
+            listHtml += `<div class="summary-list-item">${info}</div>`;
+        });
+
+        document.getElementById('modalAttendeeList').innerHTML = listHtml;
+
+        // Show Modal
+        modal.style.display = 'flex';
+    });
+
+    // 2. Close Modal
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    // 3. Final Payment Process (Triggered by Confirm Button)
+    function processPayment() {
+        closeModal();
+        
+        // Consolidate Data for Hidden Fields
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value).join('\n');
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
-        
         const matrices = currentCategory === 'Student' 
             ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') 
             : '-';
-            
         const email = document.querySelector('.input-email').value;
 
-        // Fill hidden inputs
         document.getElementById('finalName').value = names;
         document.getElementById('finalPhone').value = phones;
         document.getElementById('finalMatrix').value = matrices;
         document.getElementById('finalEmail').value = email;
 
-        // 2. Show Loading
+        // UI Loading State
         document.getElementById('registrationSection').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
 
-        // 3. Send to Google Sheet
+        const priceData = updatePrice(); 
+
+        // Send to Google Sheet
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => {
-                // 4. Redirect to ToyyibPay
+                // Redirect to ToyyibPay
                 const finalUrl = `${priceData.payLink}?amount=${priceData.totalPrice}`;
                 window.location.href = finalUrl;
             })
@@ -339,7 +452,14 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('registrationSection').style.display = 'block';
             });
-    });
+    }
+
+    // Close modal if clicked outside box
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
 </script>
 
 </body>
