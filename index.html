@@ -23,10 +23,44 @@
         .cat-btn { flex: 1; padding: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .cat-btn.active { background: #0d47a1; color: white; }
 
-        .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 15px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        /* Price Box Updates */
+        .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; position: relative; }
         .price-tag { font-size: 32px; font-weight: 800; color: #0d47a1; }
-        .per-pax { font-size: 14px; color: #555; }
-        .discount-badge { display: inline-block; background: #d32f2f; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-left: 5px; vertical-align: middle; }
+        .per-pax { font-size: 14px; color: #555; margin-top: 5px; }
+        
+        /* New Promotion Styles */
+        .old-price { text-decoration: line-through; color: #888; font-size: 18px; margin-right: 5px; font-weight: normal; }
+        
+        .promo-badge {
+            display: inline-block;
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #c62828;
+            padding: 4px 12px;
+            border-radius: 50px; /* Rounded pill shape */
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+            box-shadow: 0 2px 5px rgba(198, 40, 40, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .promo-tag-group {
+            background: #2e7d32; 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 11px; 
+            vertical-align: middle; 
+            margin-left: 5px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(198, 40, 40, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
+        }
 
         .form-section { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; position: relative; }
         .form-section-title { font-size: 14px; font-weight: bold; color: #777; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
@@ -201,20 +235,29 @@
             // Determine Base Price
             let basePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
             let groupPrice = isEarlyBird ? PRICES.STUDENT_GROUP.EARLY : PRICES.STUDENT_GROUP.NORMAL;
+            let normalPriceForDisplay = PRICES.STUDENT.NORMAL; // Always show RM100 as the "Old" price
             
             // Check for Group Discount
             if (pax >= PRICES.STUDENT_GROUP.MIN_PAX) {
                 unitPrice = groupPrice;
+                // Group + Early Bird or Group + Normal
                 display.innerHTML = `
                     <span class="price-tag">RM${unitPrice * pax}</span>
-                    <div class="per-pax">RM${unitPrice} x ${pax} pax <span class="discount-badge">GROUP SAVE</span></div>
-                    ${isEarlyBird ? '<span class="badge" style="margin-top:5px">EARLY BIRD</span>' : ''}`;
+                    ${isEarlyBird ? '<span class="promo-badge">🔥 Early Bird</span>' : ''}
+                    <div class="per-pax">
+                        ${isEarlyBird ? `<span class="old-price">RM${normalPriceForDisplay * pax}</span>` : ''}
+                        RM${unitPrice} x ${pax} pax <span class="promo-tag-group">GROUP SAVE</span>
+                    </div>`;
             } else {
+                // Individual
                 unitPrice = basePrice;
                 display.innerHTML = `
                     <span class="price-tag">RM${unitPrice * pax}</span>
-                    <div class="per-pax">RM${unitPrice} x ${pax} pax</div>
-                    ${isEarlyBird ? '<span class="badge" style="margin-top:5px">EARLY BIRD</span>' : ''}`;
+                    ${isEarlyBird ? '<span class="promo-badge">🔥 Early Bird</span>' : ''}
+                    <div class="per-pax">
+                        ${isEarlyBird ? `<span class="old-price">RM${normalPriceForDisplay * pax}</span>` : ''}
+                        RM${unitPrice} x ${pax} pax
+                    </div>`;
             }
             payLink = isEarlyBird ? LINK_STUDENT_EARLY : LINK_STUDENT_NORMAL;
 
@@ -225,7 +268,7 @@
             display.innerHTML = `
                 <span class="price-tag">RM${unitPrice * pax}</span>
                 <div class="per-pax">RM${unitPrice} x ${pax} pax</div>
-                <p style="font-size:12px; margin:5px 0 0;">Alumni Rate</p>`;
+                <p style="font-size:12px; margin:5px 0 0; color:#555;">Alumni Rate</p>`;
         }
 
         totalPrice = unitPrice * pax;
@@ -275,7 +318,6 @@
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => {
                 // 4. Redirect to ToyyibPay with custom Amount
-                // We add ?amount=RM to the link to override the bill amount (Requires Fix Amount = No)
                 const finalUrl = `${priceData.payLink}?amount=${priceData.totalPrice}`;
                 window.location.href = finalUrl;
             })
@@ -289,4 +331,3 @@
 
 </body>
 </html>
-
