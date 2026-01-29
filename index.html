@@ -118,7 +118,7 @@
         .summary-list-item { border-bottom: 1px solid #ddd; padding: 8px 0; }
         .summary-list-item:last-child { border-bottom: none; }
         
-        /* New Style for WhatsApp Note in Modal */
+        /* WA Note */
         .wa-note {
             background-color: #e8f5e9;
             color: #2e7d32;
@@ -186,7 +186,7 @@
         <div id="loading">
             <div class="spinner"></div>
             <h3>Processing Registration...</h3>
-            <p>Redirecting to secure payment...</p>
+            <p>Creating your secure bill...</p>
         </div>
     </div>
 </div>
@@ -228,13 +228,10 @@
 </div>
 
 <script>
-    // ================= CONFIGURATION =================
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTDDgw3dMSVdWIG3He9b8Qv4ioc2RVdvq3NoWoWxzTK9DtcY1V0VYsWzd5UBXvl5R4Jg/exec';
-    
-    // ToyyibPay Links
-    const LINK_STUDENT_EARLY = 'https://toyyibpay.com/Student-Early-Bird-MAGS-2026';
-    const LINK_STUDENT_NORMAL = 'https://toyyibpay.com/Student-Standard-MAGS-2026';
-    const LINK_ALUMNI = 'https://toyyibpay.com/Alumni-Registration-MAGS-2026';
+    // ===============================================
+    // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE:
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjHkPlBngM8_qGB614TH7iqv4HEKx5Vg-9b5VbBVtd8tBElw3NFOGB5ZHTKfn4MMnAxA/exec';
+    // ===============================================
 
     const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // 30 May 2026
     
@@ -257,14 +254,13 @@
         document.getElementById('btnStudent').className = cat === 'Student' ? 'cat-btn active' : 'cat-btn';
         document.getElementById('btnAlumni').className = cat === 'Alumni' ? 'cat-btn active' : 'cat-btn';
         
-        // Update the Pax Dropdown options based on category
         updatePaxDropdown(cat);
         renderFormFields();
     }
 
     function updatePaxDropdown(category) {
         const select = document.getElementById('paxSelect');
-        select.innerHTML = ''; // Clear existing
+        select.innerHTML = ''; 
         let maxPax = (category === 'Student') ? 10 : 2;
 
         for (let i = 1; i <= maxPax; i++) {
@@ -287,7 +283,6 @@
         const container = document.getElementById('attendeesContainer');
         container.innerHTML = ''; 
 
-        // Update Alert Text visibility
         const alertBox = document.getElementById('groupAlert');
         alertBox.style.display = pax > 1 ? 'block' : 'none';
 
@@ -335,7 +330,6 @@
         const display = document.getElementById('priceDisplay');
         let unitPrice = 0;
         let totalPrice = 0;
-        let payLink = '';
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
 
         if (currentCategory === 'Student') {
@@ -363,11 +357,8 @@
                         RM${unitPrice} x ${pax} pax
                     </div>`;
             }
-            payLink = isEarlyBird ? LINK_STUDENT_EARLY : LINK_STUDENT_NORMAL;
-
         } else {
             unitPrice = PRICES.ALUMNI.FIXED;
-            payLink = LINK_ALUMNI;
             display.innerHTML = `
                 <span class="price-tag">RM${unitPrice * pax}</span>
                 <div class="per-pax">RM${unitPrice} x ${pax} pax</div>
@@ -376,32 +367,28 @@
 
         totalPrice = unitPrice * pax;
 
-        // Update Hidden Inputs
         document.getElementById('hiddenTotalPrice').value = totalPrice;
         document.getElementById('hiddenPax').value = pax;
         document.getElementById('hiddenCategory').value = currentCategory;
         
-        return { payLink, totalPrice };
+        return { totalPrice };
     }
 
-    // --- MODAL & SUBMISSION LOGIC ---
+    // --- MODAL LOGIC ---
     
     const form = document.getElementById('regForm');
     const modal = document.getElementById('confirmModal');
 
-    // 1. Intercept Submit - Show Modal
     form.addEventListener('submit', e => {
         e.preventDefault();
         
         const priceData = updatePrice();
         const pax = document.getElementById('paxSelect').value;
         
-        // Populate Modal Data
         document.getElementById('modalCategory').innerText = currentCategory;
         document.getElementById('modalPax').innerText = pax + " Pax";
         document.getElementById('modalPrice').innerText = "RM" + priceData.totalPrice;
 
-        // Show/Hide WhatsApp Note based on Category
         const waBox = document.getElementById('waInfoBox');
         if (currentCategory === 'Student') {
             waBox.style.display = 'block';
@@ -409,10 +396,9 @@
             waBox.style.display = 'none';
         }
 
-        // Generate Attendee Summary for Modal
         const names = document.querySelectorAll('.input-name');
         const phones = document.querySelectorAll('.input-phone');
-        const matrices = document.querySelectorAll('.input-matrix'); // might be empty if alumni
+        const matrices = document.querySelectorAll('.input-matrix'); 
         const email = document.querySelector('.input-email').value;
 
         let listHtml = '';
@@ -431,17 +417,14 @@
         });
 
         document.getElementById('modalAttendeeList').innerHTML = listHtml;
-
-        // Show Modal
         modal.style.display = 'flex';
     });
 
-    // 2. Close Modal
     function closeModal() {
         modal.style.display = 'none';
     }
 
-    // 3. Final Payment Process (Triggered by Confirm Button)
+    // --- API PAYMENT PROCESS ---
     function processPayment() {
         closeModal();
         
@@ -458,19 +441,18 @@
         document.getElementById('finalMatrix').value = matrices;
         document.getElementById('finalEmail').value = email;
 
-        // 2. Show Loading Screen
+        // 2. Show Loading
         document.getElementById('registrationSection').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
 
         // 3. Send to Google Script & Wait for Bill URL
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
-            .then(response => response.json()) // We expect JSON now
+            .then(response => response.json()) 
             .then(data => {
                 if (data.status === 'success') {
-                    // SUCCESS: Redirect to the generated Bill URL
+                    // Redirect to the generated Bill URL
                     window.location.href = data.url;
                 } else {
-                    // ERROR: Show message
                     alert("System Error: " + data.message);
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('registrationSection').style.display = 'block';
@@ -484,7 +466,6 @@
             });
     }
 
-    // Close modal if clicked outside box
     window.onclick = function(event) {
         if (event.target == modal) {
             closeModal();
@@ -494,7 +475,3 @@
 
 </body>
 </html>
-
-
-
-
