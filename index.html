@@ -14,11 +14,11 @@
         .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; position: relative; }
         .event-details strong { color: #ffeb3b; }
         
-        /* MAP BUTTON - FIXED ALIGNMENT (LEFT) */
+        /* MAP BUTTON */
         .map-btn { 
             display: block; 
             width: fit-content;
-            margin: 10px 0 0 0; /* Changed from 'auto' to '0' to left align */
+            margin: 10px 0 0 0; 
             background: white; 
             color: #0d47a1; 
             padding: 8px 15px; 
@@ -43,10 +43,10 @@
         .price-sub { font-size: 14px; color: #555; margin-top: 5px; }
         .price-old { text-decoration: line-through; color: #888; margin-right: 5px; }
         
-        /* BADGES - FIXED ANIMATION */
+        /* BADGES */
         .badge-early { 
             background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
-            animation: pulse 1.5s infinite ease-in-out; /* Animation re-added here */
+            animation: pulse 1.5s infinite ease-in-out; 
         }
         .badge-group { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;}
         
@@ -77,7 +77,7 @@
         .modal-header { border-bottom: 1px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #0d47a1; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
         .summary-list { background: #f9f9f9; padding: 10px; border-radius: 6px; margin: 15px 0; border: 1px solid #eee; }
-        .summary-list-item { border-bottom: 1px solid #ddd; padding: 8px 0; font-size: 13px; }
+        .summary-list-item { border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 13px; line-height: 1.6; }
         .wa-note { background-color: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 15px; border: 1px solid #c8e6c9; display: none; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-confirm { flex: 2; background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
@@ -162,7 +162,7 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby51bTbxffNlp0kPHoL9LTXW0p09GrERWAsFXn2VxLezVYB1JpbVyDSFovKt30h8CLhfw/exec';
     
     // Config
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // Month is 0-indexed (4 = May)
+    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30th
     const PRICES = {
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
@@ -257,14 +257,11 @@
         if (currentCategory === 'Student') {
             let basePrice = PRICES.STUDENT.NORMAL;
             let currentPrice = PRICES.STUDENT.NORMAL;
-            let badgeHtml = '';
-
-            // Determine if Group Price applies
+            
             if (pax >= PRICES.STUDENT_GROUP.MIN_PAX) {
                 basePrice = PRICES.STUDENT_GROUP.NORMAL;
                 currentPrice = isEarlyBird ? PRICES.STUDENT_GROUP.EARLY : PRICES.STUDENT_GROUP.NORMAL;
                 
-                // Early Bird Logic
                 if (isEarlyBird) {
                    html = `
                    <div class="price-main">RM${currentPrice * pax} <span class="badge-early">🔥 Early Bird</span></div>
@@ -277,9 +274,7 @@
                    `;
                 }
                 unitPrice = currentPrice;
-
             } else {
-                // Individual Student Logic
                 currentPrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
                 
                 if (isEarlyBird) {
@@ -296,7 +291,6 @@
                 unitPrice = currentPrice;
             }
         } else {
-            // Alumni Logic
             unitPrice = PRICES.ALUMNI.FIXED;
             html = `
             <div class="price-main">RM${unitPrice * pax}</div>
@@ -323,17 +317,42 @@
         document.getElementById('modalPrice').innerText = "RM" + priceData.totalPrice;
         document.getElementById('waInfoBox').style.display = currentCategory === 'Student' ? 'block' : 'none';
 
+        // Select All Inputs
         const names = document.querySelectorAll('.input-name');
+        const phones = document.querySelectorAll('.input-phone');
+        const matrices = document.querySelectorAll('.input-matrix');
         const shuttles = document.querySelectorAll('.input-shuttle');
+        const email = document.querySelector('.input-email') ? document.querySelector('.input-email').value : '-';
+        
         let listHtml = '';
 
         names.forEach((name, i) => {
-            // Ensure visual name is uppercase in modal
-            let info = `<strong>${i + 1}. ${name.value.toUpperCase()}</strong>`;
-            if (currentCategory === 'Student' && shuttles[i]) {
-                info += `<br><span style="font-size:12px; color:#1a237e;">🚌 Bus: <b>${shuttles[i].value}</b></span>`;
+            // Start building detail string
+            let details = `<strong>${i + 1}. ${name.value.toUpperCase()}</strong>`;
+            
+            // Add Phone
+            if (phones[i]) {
+                details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
             }
-            listHtml += `<div class="summary-list-item">${info}</div>`;
+
+            // Student Specifics
+            if (currentCategory === 'Student') {
+                if (matrices[i]) {
+                    details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
+                }
+                if (shuttles[i]) {
+                    let busVal = shuttles[i].value === 'Yes' ? 'Yes (Bus Needed)' : 'No (Own Transport)';
+                    let busColor = shuttles[i].value === 'Yes' ? '#1a237e' : '#555';
+                    details += `<br><span style="color:${busColor};">🚌 Shuttle: <b>${busVal}</b></span>`;
+                }
+            }
+
+            // Lead Email
+            if (i === 0) {
+                details += `<br><span style="color:#555;">📧 Email: ${email}</span>`;
+            }
+
+            listHtml += `<div class="summary-list-item">${details}</div>`;
         });
 
         document.getElementById('modalAttendeeList').innerHTML = listHtml;
@@ -346,14 +365,10 @@
         closeModal();
         
         // 1. GATHER DATA
-        // Force UPPERCASE on Names before sending
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
-        
-        // Collect Shuttle Data
         const shuttles = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-shuttle')).map(i => i.value).join('\n') : 'N/A';
-        
         const email = document.querySelector('.input-email').value;
 
         // 2. FILL HIDDEN INPUTS
