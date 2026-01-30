@@ -14,7 +14,7 @@
         .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; position: relative; }
         .event-details strong { color: #ffeb3b; }
         
-        /* MAP BUTTON - LEFT ALIGNED */
+        /* MAP BUTTON */
         .map-btn { 
             display: block; 
             width: fit-content;
@@ -43,7 +43,7 @@
         .price-sub { font-size: 14px; color: #555; margin-top: 5px; }
         .price-old { text-decoration: line-through; color: #888; margin-right: 5px; }
         
-        /* BADGES - FIRE ANIMATION PRESERVED */
+        /* BADGES */
         .badge-early { 
             background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
             animation: pulse 1.5s infinite ease-in-out; 
@@ -123,11 +123,9 @@
                 <input type="hidden" name="name" id="finalName">
                 <input type="hidden" name="phone" id="finalPhone">
                 <input type="hidden" name="matrix_no" id="finalMatrix">
-                
                 <input type="hidden" name="year_study" id="finalYear">
                 <input type="hidden" name="student_type" id="finalType">
                 <input type="hidden" name="faculty" id="finalFaculty">
-                
                 <input type="hidden" name="shuttle" id="finalShuttle">
                 <input type="hidden" name="email" id="finalEmail">
 
@@ -220,7 +218,8 @@
     }
 
     function generateFacultyOptions() {
-        let opts = '';
+        // Default placeholder
+        let opts = '<option value="" disabled selected>Select Faculty</option>'; 
         FACULTY_LIST.forEach(f => {
             opts += `<option value="${f}">${f}</option>`;
         });
@@ -258,7 +257,8 @@
 
                 <div class="form-group">
                     <label>Year of Study</label>
-                    <select class="input-year">
+                    <select class="input-year" required>
+                        <option value="" disabled selected>Select Year</option>
                         <option value="Year 1">Year 1</option>
                         <option value="Year 2">Year 2</option>
                         <option value="Year 3">Year 3</option>
@@ -270,7 +270,8 @@
 
                 <div class="form-group">
                     <label>Student Type</label>
-                    <select class="input-type">
+                    <select class="input-type" required>
+                        <option value="" disabled selected>Select Type</option>
                         <option value="Local Student">Local Student</option>
                         <option value="International Student">International Student</option>
                     </select>
@@ -278,14 +279,15 @@
 
                 <div class="form-group">
                     <label>Faculty</label>
-                    <select class="input-faculty">
+                    <select class="input-faculty" required>
                         ${generateFacultyOptions()}
                     </select>
                 </div>
                 
                 <div class="form-group" style="background: #e8eaf6; padding: 10px; border-radius: 6px;">
                     <label style="color: #1a237e; font-size:13px;">🚌 Shuttle Bus (College to Hotel)</label>
-                    <select class="input-shuttle">
+                    <select class="input-shuttle" required>
+                        <option value="" disabled selected>Select Option</option>
                         <option value="Yes">Yes, I need the Shuttle Bus</option>
                         <option value="No">No, I have my own transport</option>
                     </select>
@@ -371,6 +373,20 @@
 
     form.addEventListener('submit', e => {
         e.preventDefault();
+        
+        // --- 1. VALIDATE REQUIRED FIELDS MANUALLY (Double Check) ---
+        // Browser validation handles most, but we check empty selects just in case
+        if (currentCategory === 'Student') {
+            const selects = document.querySelectorAll('select[required]');
+            for (let select of selects) {
+                if (select.value === "") {
+                    alert("Please fill in all details for all students.");
+                    select.focus();
+                    return;
+                }
+            }
+        }
+
         const priceData = updatePrice();
         document.getElementById('modalCategory').innerText = currentCategory;
         document.getElementById('modalPax').innerText = document.getElementById('paxSelect').value + " Pax";
@@ -398,7 +414,7 @@
                 details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
             }
 
-            // Student Specifics (New Fields included here)
+            // Student Specifics
             if (currentCategory === 'Student') {
                 if (matrices[i]) {
                     details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
@@ -438,7 +454,7 @@
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
         
-        // STUDENT DATA (Join with newline, or '-' if Alumni)
+        // STUDENT DATA
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
         const years = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-year')).map(i => i.value).join('\n') : '-';
         const types = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-type')).map(i => i.value).join('\n') : '-';
