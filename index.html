@@ -8,17 +8,17 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
         
-        /* HEADER RESTORED */
+        /* HEADER */
         .header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 30px 20px; text-align: center; }
         .header h1 { margin: 0 0 10px; font-size: 28px; letter-spacing: 1px; }
         .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; position: relative; }
         .event-details strong { color: #ffeb3b; }
         
-        /* MAP BUTTON RESTORED */
+        /* MAP BUTTON - FIXED ALIGNMENT (LEFT) */
         .map-btn { 
             display: block; 
             width: fit-content;
-            margin: 10px auto 0 auto; 
+            margin: 10px 0 0 0; /* Changed from 'auto' to '0' to left align */
             background: white; 
             color: #0d47a1; 
             padding: 8px 15px; 
@@ -37,14 +37,20 @@
         .cat-btn { flex: 1; padding: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .cat-btn.active { background: #0d47a1; color: white; }
 
-        /* PRICE BOX RESTORED */
+        /* PRICE BOX */
         .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 15px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
         .price-main { font-size: 36px; font-weight: 800; color: #0d47a1; line-height: 1; }
         .price-sub { font-size: 14px; color: #555; margin-top: 5px; }
         .price-old { text-decoration: line-through; color: #888; margin-right: 5px; }
         
-        .badge-early { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;}
+        /* BADGES - FIXED ANIMATION */
+        .badge-early { 
+            background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
+            animation: pulse 1.5s infinite ease-in-out; /* Animation re-added here */
+        }
         .badge-group { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;}
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         .form-section { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; }
         .form-section-title { font-size: 14px; font-weight: bold; color: #777; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
@@ -340,7 +346,7 @@
         closeModal();
         
         // 1. GATHER DATA
-        // Force UPPERCASE on Names
+        // Force UPPERCASE on Names before sending
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
