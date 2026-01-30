@@ -7,7 +7,7 @@
     <style>
         /* --- LIGHT THEME (CHRONO-INSTITUTE) CSS --- */
         
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Cinzel:wght@400;700&family=Segoe+UI:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Segoe+UI:wght@400;600&display=swap');
 
         body { 
             font-family: 'Segoe UI', sans-serif; 
@@ -79,8 +79,9 @@
             font-weight: 800;
         }
         
+        /* UPDATED FONT */
         .header-desc { 
-            font-family: 'Courier Prime', monospace; 
+            font-family: 'Segoe UI', sans-serif; 
             color: #555; 
             font-weight: 600;
             font-size: 14px; 
@@ -101,7 +102,7 @@
             text-align: left; 
             color: #333; 
         }
-        /* UPDATED: Removed Courier Prime font so it matches the Number of Pax font */
+        
         .event-details strong { color: #008b8b; }
         
         /* BUTTONS */
@@ -123,10 +124,10 @@
         .map-btn:hover { background: #b8860b; color: #fff; }
 
         .contact-section { border-top: 1px dashed #ccc; padding-top: 15px; margin-top: 10px; }
-        .contact-title { font-weight: bold; color: #666; margin-bottom: 8px; display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Courier Prime', monospace; }
+        /* UPDATED FONT */
+        .contact-title { font-weight: bold; color: #666; margin-bottom: 8px; display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; }
         .contact-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* UPDATED: Made WA Button bold and uppercase to match Map Button */
         .wa-btn {
             background: #fff;
             color: #b8860b;
@@ -134,12 +135,12 @@
             padding: 6px 12px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 13px; /* Increased to match map button */
+            font-size: 13px; 
             border: 1px solid #b8860b;
             transition: 0.3s;
             display: inline-flex;
             align-items: center;
-            text-transform: uppercase; /* Added uppercase */
+            text-transform: uppercase; 
         }
         .wa-btn:hover { border-color: #25D366; color: #25D366; background: #fff; }
 
@@ -179,10 +180,12 @@
             box-shadow: 0 5px 15px rgba(0, 139, 139, 0.1);
         }
 
-        .price-main { font-size: 36px; font-weight: 800; color: #008b8b; font-family: 'Courier Prime', monospace; }
+        /* UPDATED FONT */
+        .price-main { font-size: 36px; font-weight: 800; color: #008b8b; font-family: 'Segoe UI', sans-serif; }
         .price-sub { font-size: 14px; color: #666; margin-top: 5px; font-family: 'Segoe UI', sans-serif; }
         .price-old { text-decoration: line-through; color: #999; margin-right: 5px; }
         
+        /* UPDATED FONT */
         .promo-expiry {
             color: #d63031;
             font-weight: bold;
@@ -191,7 +194,7 @@
             padding-top: 10px;
             border-top: 1px dashed #ccc;
             letter-spacing: 1px;
-            font-family: 'Courier Prime', monospace;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         /* BADGES */
@@ -203,7 +206,8 @@
         
         /* FORM INPUTS */
         .form-section { margin-bottom: 20px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-left: 4px solid #b8860b; border-radius: 4px; }
-        .form-section-title { font-size: 14px; font-family: 'Courier Prime', monospace; color: #b8860b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        /* UPDATED FONT */
+        .form-section-title { font-size: 14px; font-family: 'Segoe UI', sans-serif; color: #b8860b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
         
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 8px; font-weight: 700; color: #444; font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -226,10 +230,10 @@
             box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
         }
         
-        /* UPDATED: Removed the custom font-family so it matches the phone number font */
         .input-name { text-transform: uppercase; }
 
         /* SUBMIT BUTTON */
+        /* UPDATED FONT */
         .btn-submit { 
             width: 100%; 
             padding: 16px; 
@@ -239,7 +243,7 @@
             border-radius: 6px; 
             font-size: 16px; 
             font-weight: bold; 
-            font-family: 'Courier Prime', monospace;
+            font-family: 'Segoe UI', sans-serif;
             text-transform: uppercase;
             cursor: pointer; 
             margin-top: 10px; 
@@ -249,9 +253,11 @@
         }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(184, 134, 11, 0.4); }
         
-        .info-alert { background: #fff8e1; color: #b8860b; padding: 12px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffe082; display: flex; align-items: center; gap: 10px; font-family: 'Courier Prime', monospace; border-radius: 4px; }
+        /* UPDATED FONT */
+        .info-alert { background: #fff8e1; color: #b8860b; padding: 12px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffe082; display: flex; align-items: center; gap: 10px; font-family: 'Segoe UI', sans-serif; border-radius: 4px; }
         
-        #loading { display: none; text-align: center; padding: 40px 20px; color: #b8860b; font-family: 'Courier Prime', monospace; }
+        /* UPDATED FONT */
+        #loading { display: none; text-align: center; padding: 40px 20px; color: #b8860b; font-family: 'Segoe UI', sans-serif; }
         .spinner { border: 4px solid #eee; border-top: 4px solid #b8860b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -259,13 +265,16 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
         .modal-box { background: #fff; border-radius: 8px; width: 100%; max-width: 500px; padding: 25px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); color: #333;}
         .modal-header { border-bottom: 2px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #b8860b; font-family: 'Cinzel', serif; text-transform: uppercase; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #555; font-family: 'Courier Prime', monospace; }
+        /* UPDATED FONT */
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #555; font-family: 'Segoe UI', sans-serif; }
         .summary-list { background: #f9f9f9; padding: 10px; margin: 15px 0; border: 1px solid #eee; border-radius: 4px; }
         .summary-list-item { border-bottom: 1px dashed #ccc; padding: 10px 0; font-size: 13px; line-height: 1.6; color: #333; }
         .wa-note { background-color: #e6ffef; color: #26af61; padding: 10px; font-size: 12px; margin-top: 15px; border: 1px solid #26af61; display: none; border-radius: 4px; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-confirm { flex: 2; background: #2ed573; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Courier Prime', monospace; border-radius: 4px; }
-        .btn-cancel { flex: 1; background: #555; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Courier Prime', monospace; border-radius: 4px; }
+        /* UPDATED FONT */
+        .btn-confirm { flex: 2; background: #2ed573; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; border-radius: 4px; }
+        /* UPDATED FONT */
+        .btn-cancel { flex: 1; background: #555; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; border-radius: 4px; }
         .btn-cancel:hover { background: #333; }
         .btn-confirm:hover { background: #26af61; }
     </style>
@@ -355,7 +364,7 @@
         <div class="summary-row"><span class="summary-label">Total Pax:</span><span id="modalPax"></span></div>
         <div class="summary-row"><span class="summary-label">Total Price:</span><span style="color: #008b8b; font-size: 18px;" id="modalPrice"></span></div>
 
-        <div style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #b8860b; font-family: 'Courier Prime', monospace;">Traveler Manifest:</div>
+        <div style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #b8860b; font-family: 'Segoe UI', sans-serif;">Traveler Manifest:</div>
         <div class="summary-list" id="modalAttendeeList"></div>
 
         <div class="wa-note" id="waInfoBox">📲 <strong>WhatsApp Group:</strong> Link will be sent via email.</div>
