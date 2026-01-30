@@ -14,7 +14,7 @@
         .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; position: relative; }
         .event-details strong { color: #ffeb3b; }
         
-        /* MAP BUTTON */
+        /* MAP BUTTON - LEFT ALIGNED */
         .map-btn { 
             display: block; 
             width: fit-content;
@@ -43,7 +43,7 @@
         .price-sub { font-size: 14px; color: #555; margin-top: 5px; }
         .price-old { text-decoration: line-through; color: #888; margin-right: 5px; }
         
-        /* BADGES */
+        /* BADGES - FIRE ANIMATION PRESERVED */
         .badge-early { 
             background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
             animation: pulse 1.5s infinite ease-in-out; 
@@ -123,6 +123,11 @@
                 <input type="hidden" name="name" id="finalName">
                 <input type="hidden" name="phone" id="finalPhone">
                 <input type="hidden" name="matrix_no" id="finalMatrix">
+                
+                <input type="hidden" name="year_study" id="finalYear">
+                <input type="hidden" name="student_type" id="finalType">
+                <input type="hidden" name="faculty" id="finalFaculty">
+                
                 <input type="hidden" name="shuttle" id="finalShuttle">
                 <input type="hidden" name="email" id="finalEmail">
 
@@ -159,7 +164,7 @@
 
 <script>
     // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE:
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby51bTbxffNlp0kPHoL9LTXW0p09GrERWAsFXn2VxLezVYB1JpbVyDSFovKt30h8CLhfw/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPiDtNMrwk2bAequRCihDECje_73aWtsHKKkCP7FCtfwSOMZIUHkl9Y9qfeifNB2A39w/exec';
     
     // Config
     const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30th
@@ -168,6 +173,26 @@
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
         ALUMNI: { FIXED: 150 }
     };
+
+    // Faculty List
+    const FACULTY_LIST = [
+        "Faculty of Arts and Social Science",
+        "Faculty of Built Environment",
+        "Faculty of Business and Economics",
+        "Faculty of Computer Science and Information Technology",
+        "Faculty of Creative Arts",
+        "Faculty of Dentistry",
+        "Faculty of Education",
+        "Faculty of Engineering",
+        "Faculty of Language and Linguistics",
+        "Faculty of Law",
+        "Faculty of Medicine",
+        "Faculty of Pharmacy",
+        "Faculty of Science",
+        "Faculty of Sports and Exercise Sciences",
+        "Academy of Islamic Studies",
+        "Academy of Malay Studies"
+    ];
 
     let currentCategory = 'Student';
     setCategory('Student');
@@ -192,6 +217,14 @@
             select.appendChild(option);
         }
         select.value = "1";
+    }
+
+    function generateFacultyOptions() {
+        let opts = '';
+        FACULTY_LIST.forEach(f => {
+            opts += `<option value="${f}">${f}</option>`;
+        });
+        return opts;
     }
 
     function renderFormFields() {
@@ -221,6 +254,33 @@
                 <div class="form-group">
                     <label>Matrix Number</label>
                     <input type="text" class="input-matrix" required placeholder="e.g. S2180000">
+                </div>
+
+                <div class="form-group">
+                    <label>Year of Study</label>
+                    <select class="input-year">
+                        <option value="Year 1">Year 1</option>
+                        <option value="Year 2">Year 2</option>
+                        <option value="Year 3">Year 3</option>
+                        <option value="Year 4">Year 4</option>
+                        <option value="Year 5">Year 5</option>
+                        <option value="Post Graduate">Post Graduate</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Student Type</label>
+                    <select class="input-type">
+                        <option value="Local Student">Local Student</option>
+                        <option value="International Student">International Student</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Faculty</label>
+                    <select class="input-faculty">
+                        ${generateFacultyOptions()}
+                    </select>
                 </div>
                 
                 <div class="form-group" style="background: #e8eaf6; padding: 10px; border-radius: 6px;">
@@ -321,6 +381,9 @@
         const names = document.querySelectorAll('.input-name');
         const phones = document.querySelectorAll('.input-phone');
         const matrices = document.querySelectorAll('.input-matrix');
+        const years = document.querySelectorAll('.input-year');
+        const types = document.querySelectorAll('.input-type');
+        const faculties = document.querySelectorAll('.input-faculty');
         const shuttles = document.querySelectorAll('.input-shuttle');
         const email = document.querySelector('.input-email') ? document.querySelector('.input-email').value : '-';
         
@@ -335,11 +398,18 @@
                 details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
             }
 
-            // Student Specifics
+            // Student Specifics (New Fields included here)
             if (currentCategory === 'Student') {
                 if (matrices[i]) {
                     details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
                 }
+                
+                // Show new details in Recheck
+                if (years[i] && types[i] && faculties[i]) {
+                    details += `<br><span style="color:#555;">🎓 ${years[i].value} | ${types[i].value}</span>`;
+                    details += `<br><span style="color:#555;">🏫 ${faculties[i].value}</span>`;
+                }
+
                 if (shuttles[i]) {
                     let busVal = shuttles[i].value === 'Yes' ? 'Yes (Bus Needed)' : 'No (Own Transport)';
                     let busColor = shuttles[i].value === 'Yes' ? '#1a237e' : '#555';
@@ -367,14 +437,23 @@
         // 1. GATHER DATA
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
+        
+        // STUDENT DATA (Join with newline, or '-' if Alumni)
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
+        const years = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-year')).map(i => i.value).join('\n') : '-';
+        const types = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-type')).map(i => i.value).join('\n') : '-';
+        const faculties = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-faculty')).map(i => i.value).join('\n') : '-';
         const shuttles = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-shuttle')).map(i => i.value).join('\n') : 'N/A';
+        
         const email = document.querySelector('.input-email').value;
 
         // 2. FILL HIDDEN INPUTS
         document.getElementById('finalName').value = names;
         document.getElementById('finalPhone').value = phones;
         document.getElementById('finalMatrix').value = matrices;
+        document.getElementById('finalYear').value = years;
+        document.getElementById('finalType').value = types;
+        document.getElementById('finalFaculty').value = faculties;
         document.getElementById('finalShuttle').value = shuttles; 
         document.getElementById('finalEmail').value = email;
 
