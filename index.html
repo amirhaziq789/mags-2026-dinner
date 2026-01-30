@@ -8,132 +8,55 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
         
-        /* Header */
         .header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 30px 20px; text-align: center; }
         .header h1 { margin: 0 0 10px; font-size: 28px; letter-spacing: 1px; }
         .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; margin-top: 15px; }
         .event-details strong { color: #ffeb3b; }
         .map-btn { display: inline-block; background: white; color: #0d47a1; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px; margin-top: 5px; }
-        .map-btn:hover { background: #eee; }
 
         .content { padding: 25px; }
 
-        /* Tabs */
         .category-selector { display: flex; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
         .cat-btn { flex: 1; padding: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .cat-btn.active { background: #0d47a1; color: white; }
 
-        /* Price Box */
-        .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; position: relative; }
+        .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
         .price-tag { font-size: 32px; font-weight: 800; color: #0d47a1; }
         .per-pax { font-size: 14px; color: #555; margin-top: 5px; display: block; }
-        
-        /* Promotion Styles */
-        .old-price { text-decoration: line-through; color: #888; font-size: 18px; margin-right: 5px; font-weight: normal; }
-        
-        .promo-badge {
-            display: inline-block;
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #c62828;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 8px;
-            vertical-align: middle;
-            box-shadow: 0 2px 5px rgba(198, 40, 40, 0.2);
-            animation: pulse 2s infinite;
-        }
+        .promo-badge { background: #ffebee; color: #c62828; border: 1px solid #c62828; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: bold; vertical-align: middle; animation: pulse 2s infinite; }
+        .promo-tag-group { display: block; width: fit-content; margin: 8px auto 0 auto; background: #2e7d32; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
 
-        /* Group Save Tag - Centered Below */
-        .promo-tag-group {
-            display: block; 
-            width: fit-content;
-            margin: 8px auto 0 auto; 
-            background: #2e7d32; 
-            color: white; 
-            padding: 4px 10px; 
-            border-radius: 4px; 
-            font-size: 12px; 
-            font-weight: bold;
-        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(198, 40, 40, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
-        }
-
-        .form-section { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; position: relative; }
+        .form-section { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; }
         .form-section-title { font-size: 14px; font-weight: bold; color: #777; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
         
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
         input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
         
-        .btn-submit { width: 100%; padding: 14px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-submit:hover { background: #1565c0; }
+        /* Force Uppercase on Input */
+        .input-name { text-transform: uppercase; }
 
+        .btn-submit { width: 100%; padding: 14px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
         .info-alert { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; }
         
         #loading { display: none; text-align: center; padding: 40px 20px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0d47a1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- MODAL STYLES --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-box {
-            background: white;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
-            padding: 25px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            text-align: left;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: white; border-radius: 10px; width: 100%; max-width: 500px; padding: 25px; max-height: 90vh; overflow-y: auto; }
         .modal-header { border-bottom: 1px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #0d47a1; }
-        
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-        .summary-label { color: #666; font-weight: 600; }
-        .summary-value { font-weight: bold; color: #333; text-align: right; }
-        
-        .summary-list { background: #f9f9f9; padding: 10px; border-radius: 6px; margin: 15px 0; max-height: 200px; overflow-y: auto; font-size: 13px; border: 1px solid #eee; }
-        .summary-list-item { border-bottom: 1px solid #ddd; padding: 8px 0; }
-        .summary-list-item:last-child { border-bottom: none; }
-        
-        /* WA Note */
-        .wa-note {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-top: 15px;
-            border: 1px solid #c8e6c9;
-            display: none; /* Hidden by default */
-        }
-
+        .summary-list { background: #f9f9f9; padding: 10px; border-radius: 6px; margin: 15px 0; border: 1px solid #eee; }
+        .summary-list-item { border-bottom: 1px solid #ddd; padding: 8px 0; font-size: 13px; }
+        .wa-note { background-color: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 15px; border: 1px solid #c8e6c9; display: none; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-confirm { flex: 2; background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-cancel { flex: 1; background: #e0e0e0; color: #333; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        
     </style>
 </head>
 <body>
@@ -145,8 +68,6 @@
             <div>📅 <strong>Date:</strong> 5 June 2026</div>
             <div>⏰ <strong>Time:</strong> 8:00 PM</div>
             <div>📍 <strong>Location:</strong> Vivatel Hotel Kuala Lumpur</div>
-            <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Viva Mall, 85, Jln Loke Yew, Taman Miharja, 55200 KL</div>
-            <a href="https://maps.google.com/?q=Vivatel+Hotel+Kuala+Lumpur" target="_blank" class="map-btn">📍 Open in Google Maps</a>
         </div>
     </div>
 
@@ -165,16 +86,18 @@
             <div class="price-box" id="priceDisplay">Loading...</div>
 
             <div class="info-alert" id="groupAlert">
-                📢 <strong>Group Registration:</strong> Please fill in details for <strong>ALL</strong> attendees below. The payment receipt will be sent to the email of the <strong>first person (Lead)</strong>.
+                📢 <strong>Group Registration:</strong> Receipt will be sent to the Lead (Attendee #1).
             </div>
 
             <form id="regForm">
                 <input type="hidden" name="category" id="hiddenCategory">
                 <input type="hidden" name="total_price" id="hiddenTotalPrice">
                 <input type="hidden" name="pax" id="hiddenPax">
+                
                 <input type="hidden" name="name" id="finalName">
                 <input type="hidden" name="phone" id="finalPhone">
                 <input type="hidden" name="matrix_no" id="finalMatrix">
+                <input type="hidden" name="shuttle" id="finalShuttle">
                 <input type="hidden" name="email" id="finalEmail">
 
                 <div id="attendeesContainer"></div>
@@ -186,7 +109,6 @@
         <div id="loading">
             <div class="spinner"></div>
             <h3>Processing Registration...</h3>
-            <p>Creating your secure bill...</p>
         </div>
     </div>
 </div>
@@ -194,32 +116,14 @@
 <div class="modal-overlay" id="confirmModal">
     <div class="modal-box">
         <div class="modal-header">Confirm Registration</div>
-        
-        <div class="summary-row">
-            <span class="summary-label">Category:</span>
-            <span class="summary-value" id="modalCategory"></span>
-        </div>
-        <div class="summary-row">
-            <span class="summary-label">Total Pax:</span>
-            <span class="summary-value" id="modalPax"></span>
-        </div>
-        <div class="summary-row">
-            <span class="summary-label">Total Price:</span>
-            <span class="summary-value" style="color: #d32f2f; font-size: 18px;" id="modalPrice"></span>
-        </div>
+        <div class="summary-row"><span class="summary-label">Category:</span><span id="modalCategory"></span></div>
+        <div class="summary-row"><span class="summary-label">Total Pax:</span><span id="modalPax"></span></div>
+        <div class="summary-row"><span class="summary-label">Total Price:</span><span style="color: #d32f2f; font-size: 18px;" id="modalPrice"></span></div>
 
         <div style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #555;">Attendee Details:</div>
-        <div class="summary-list" id="modalAttendeeList">
-            </div>
+        <div class="summary-list" id="modalAttendeeList"></div>
 
-        <div class="wa-note" id="waInfoBox">
-            📲 <strong>WhatsApp Group:</strong> The invitation link will be sent to your email after payment is successful.
-        </div>
-
-        <div style="font-size: 12px; color: #777; margin-top: 10px; font-style: italic;">
-            Please ensure all details are correct. Receipt will be sent to the Lead email.
-        </div>
-
+        <div class="wa-note" id="waInfoBox">📲 <strong>WhatsApp Group:</strong> Link will be sent via email.</div>
         <div class="modal-actions">
             <button type="button" class="btn-cancel" onclick="closeModal()">Edit</button>
             <button type="button" class="btn-confirm" onclick="processPayment()">Confirm & Pay</button>
@@ -228,32 +132,23 @@
 </div>
 
 <script>
-    // ===============================================
     // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE:
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzD3azq62dhQX-Di8Vg3dchZ8WZ7gvsUb-eaNbyWGkRnMu-Djz38pExwGNe5mh5c2Gm_Q/exec';
-    // ===============================================
-
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // 30 May 2026
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby51bTbxffNlp0kPHoL9LTXW0p09GrERWAsFXn2VxLezVYB1JpbVyDSFovKt30h8CLhfw/exec';
     
-    // PRICING SETTINGS
+    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30);
     const PRICES = {
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
         ALUMNI: { FIXED: 150 }
     };
-    // ===============================================
 
     let currentCategory = 'Student';
-
-    // Initialize Page
     setCategory('Student');
 
     function setCategory(cat) {
         currentCategory = cat;
-        // UI Updates
         document.getElementById('btnStudent').className = cat === 'Student' ? 'cat-btn active' : 'cat-btn';
         document.getElementById('btnAlumni').className = cat === 'Alumni' ? 'cat-btn active' : 'cat-btn';
-        
         updatePaxDropdown(cat);
         renderFormFields();
     }
@@ -262,17 +157,11 @@
         const select = document.getElementById('paxSelect');
         select.innerHTML = ''; 
         let maxPax = (category === 'Student') ? 10 : 2;
-
         for (let i = 1; i <= maxPax; i++) {
             let option = document.createElement('option');
             option.value = i;
-            if (i === 1) {
-                option.text = "1 Pax (Individual)";
-            } else if (category === 'Student' && i >= 3) {
-                 option.text = i + " Pax (Group)";
-            } else {
-                option.text = i + " Pax";
-            }
+            option.text = (i === 1) ? "1 Pax (Individual)" : i + " Pax";
+            if (category === 'Student' && i >= 3) option.text += " (Group Save)";
             select.appendChild(option);
         }
         select.value = "1";
@@ -282,20 +171,16 @@
         const pax = parseInt(document.getElementById('paxSelect').value);
         const container = document.getElementById('attendeesContainer');
         container.innerHTML = ''; 
-
-        const alertBox = document.getElementById('groupAlert');
-        alertBox.style.display = pax > 1 ? 'block' : 'none';
+        document.getElementById('groupAlert').style.display = pax > 1 ? 'block' : 'none';
 
         for (let i = 1; i <= pax; i++) {
             const isLead = (i === 1);
-            const title = isLead ? `Attendee #${i} (Group Lead)` : `Attendee #${i}`;
-            
             let html = `
             <div class="form-section">
-                <div class="form-section-title">${title}</div>
+                <div class="form-section-title">${isLead ? 'Lead Attendee' : 'Attendee #' + i}</div>
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" class="input-name" required placeholder="Full Name">
+                    <input type="text" class="input-name" oninput="this.value = this.value.toUpperCase()" required placeholder="FULL NAME (CAPS)">
                 </div>
                 <div class="form-group">
                     <label>Phone Number</label>
@@ -307,6 +192,13 @@
                 <div class="form-group">
                     <label>Matrix Number</label>
                     <input type="text" class="input-matrix" required placeholder="e.g. S2180000">
+                </div>
+                <div class="form-group" style="background: #e8eaf6; padding: 10px; border-radius: 6px;">
+                    <label style="color: #1a237e;">🚌 Shuttle Bus (College to Hotel)</label>
+                    <select class="input-shuttle">
+                        <option value="Yes">Yes, I need the Shuttle Bus</option>
+                        <option value="No">No, I have my own transport</option>
+                    </select>
                 </div>`;
             }
 
@@ -329,90 +221,51 @@
         const today = new Date();
         const display = document.getElementById('priceDisplay');
         let unitPrice = 0;
-        let totalPrice = 0;
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
 
         if (currentCategory === 'Student') {
             let basePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
             let groupPrice = isEarlyBird ? PRICES.STUDENT_GROUP.EARLY : PRICES.STUDENT_GROUP.NORMAL;
-            let normalPriceForDisplay = PRICES.STUDENT.NORMAL;
             
             if (pax >= PRICES.STUDENT_GROUP.MIN_PAX) {
                 unitPrice = groupPrice;
-                display.innerHTML = `
-                    <span class="price-tag">RM${unitPrice * pax}</span>
-                    ${isEarlyBird ? '<span class="promo-badge">🔥 Early Bird</span>' : ''}
-                    <div class="per-pax">
-                        ${isEarlyBird ? `<span class="old-price">RM${normalPriceForDisplay * pax}</span>` : ''}
-                        RM${unitPrice} x ${pax} pax
-                    </div>
-                    <div class="promo-tag-group">GROUP SAVE</div>`;
+                display.innerHTML = `<span class="price-tag">RM${unitPrice * pax}</span> <div class="promo-tag-group">GROUP SAVE</div>`;
             } else {
                 unitPrice = basePrice;
-                display.innerHTML = `
-                    <span class="price-tag">RM${unitPrice * pax}</span>
-                    ${isEarlyBird ? '<span class="promo-badge">🔥 Early Bird</span>' : ''}
-                    <div class="per-pax">
-                        ${isEarlyBird ? `<span class="old-price">RM${normalPriceForDisplay * pax}</span>` : ''}
-                        RM${unitPrice} x ${pax} pax
-                    </div>`;
+                display.innerHTML = `<span class="price-tag">RM${unitPrice * pax}</span>`;
             }
         } else {
             unitPrice = PRICES.ALUMNI.FIXED;
-            display.innerHTML = `
-                <span class="price-tag">RM${unitPrice * pax}</span>
-                <div class="per-pax">RM${unitPrice} x ${pax} pax</div>
-                <p style="font-size:12px; margin:5px 0 0; color:#555;">Alumni Rate</p>`;
+            display.innerHTML = `<span class="price-tag">RM${unitPrice * pax}</span> <div class="per-pax">Alumni Rate</div>`;
         }
 
-        totalPrice = unitPrice * pax;
-
-        document.getElementById('hiddenTotalPrice').value = totalPrice;
+        document.getElementById('hiddenTotalPrice').value = unitPrice * pax;
         document.getElementById('hiddenPax').value = pax;
         document.getElementById('hiddenCategory').value = currentCategory;
-        
-        return { totalPrice };
+        return { totalPrice: unitPrice * pax };
     }
 
-    // --- MODAL LOGIC ---
-    
+    // --- MODAL & SUBMIT ---
     const form = document.getElementById('regForm');
     const modal = document.getElementById('confirmModal');
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        
         const priceData = updatePrice();
-        const pax = document.getElementById('paxSelect').value;
-        
         document.getElementById('modalCategory').innerText = currentCategory;
-        document.getElementById('modalPax').innerText = pax + " Pax";
+        document.getElementById('modalPax').innerText = document.getElementById('paxSelect').value + " Pax";
         document.getElementById('modalPrice').innerText = "RM" + priceData.totalPrice;
-
-        const waBox = document.getElementById('waInfoBox');
-        if (currentCategory === 'Student') {
-            waBox.style.display = 'block';
-        } else {
-            waBox.style.display = 'none';
-        }
+        document.getElementById('waInfoBox').style.display = currentCategory === 'Student' ? 'block' : 'none';
 
         const names = document.querySelectorAll('.input-name');
-        const phones = document.querySelectorAll('.input-phone');
-        const matrices = document.querySelectorAll('.input-matrix'); 
-        const email = document.querySelector('.input-email').value;
-
+        const shuttles = document.querySelectorAll('.input-shuttle');
         let listHtml = '';
-        names.forEach((nameInput, index) => {
-            let info = `<strong>${index + 1}. ${nameInput.value}</strong><br>
-                        📞 ${phones[index].value}`;
-            
-            if(currentCategory === 'Student' && matrices[index]) {
-                info += `<br>🆔 ${matrices[index].value}`;
-            }
-            if(index === 0) {
-                info += `<br>📧 ${email} (Receipt)`;
-            }
 
+        names.forEach((name, i) => {
+            let info = `<strong>${i + 1}. ${name.value}</strong>`;
+            if (currentCategory === 'Student' && shuttles[i]) {
+                info += `<br><span style="font-size:12px; color:#1a237e;">🚌 Bus: <b>${shuttles[i].value}</b></span>`;
+            }
             listHtml += `<div class="summary-list-item">${info}</div>`;
         });
 
@@ -420,62 +273,42 @@
         modal.style.display = 'flex';
     });
 
-    function closeModal() {
-        modal.style.display = 'none';
-    }
+    function closeModal() { modal.style.display = 'none'; }
 
-    // --- API PAYMENT PROCESS ---
     function processPayment() {
         closeModal();
-        
-        // 1. Prepare Data
-        const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value).join('\n');
+        const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); // Ensure UPPERCASE here too
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
-        const matrices = currentCategory === 'Student' 
-            ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') 
-            : '-';
+        const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
+        
+        // NEW: Collect Shuttle Data
+        const shuttles = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-shuttle')).map(i => i.value).join('\n') : 'N/A';
+        
         const email = document.querySelector('.input-email').value;
 
         document.getElementById('finalName').value = names;
         document.getElementById('finalPhone').value = phones;
         document.getElementById('finalMatrix').value = matrices;
+        document.getElementById('finalShuttle').value = shuttles; // Send to Backend
         document.getElementById('finalEmail').value = email;
 
-        // 2. Show Loading
         document.getElementById('registrationSection').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
 
-        // 3. Send to Google Script & Wait for Bill URL
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => response.json()) 
             .then(data => {
-                if (data.status === 'success') {
-                    // Redirect to the generated Bill URL
-                    window.location.href = data.url;
-                } else {
-                    alert("System Error: " + data.message);
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('registrationSection').style.display = 'block';
-                }
+                if (data.status === 'success') { window.location.href = data.url; } 
+                else { alert("System Error: " + data.message); reloadPage(); }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Connection Error. Please try again.");
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('registrationSection').style.display = 'block';
-            });
+            .catch(error => { alert("Connection Error. Please try again."); reloadPage(); });
     }
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            closeModal();
-        }
+    function reloadPage() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('registrationSection').style.display = 'block';
     }
 </script>
 
 </body>
 </html>
-
-
-
-
