@@ -3,138 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAGS 2026 Registration</title>
+    <title>MAGS 2026: Time Travel Edition</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
+        /* --- TIME TRAVEL THEME CSS --- */
         
-        /* HEADER */
-        .header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 30px 20px; text-align: center; }
-        
-        .header h1 { 
-            margin: 0 0 15px; 
-            font-size: 24px; 
-            letter-spacing: 1px; 
-            line-height: 1.4; 
-            text-transform: uppercase;
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Segoe+UI:wght@400;600&display=swap');
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #050b14; /* Deep Space */
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            color: #e0e0e0;
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            animation: starsMove 100s linear infinite;
+        }
+
+        @keyframes starsMove {
+            from { background-position: 0 0, 40px 60px, 130px 270px; }
+            to { background-position: 550px 550px, 390px 410px, 680px 820px; }
         }
         
-        .header-desc { font-size: 14px; line-height: 1.5; opacity: 0.95; margin-bottom: 20px; max-width: 90%; margin-left: auto; margin-right: auto; }
-
-        .event-details { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; text-align: left; position: relative; }
-        .event-details strong { color: #ffeb3b; }
+        /* Glassmorphism Container */
+        .container { 
+            background: rgba(16, 24, 48, 0.85); 
+            backdrop-filter: blur(12px);
+            width: 100%; 
+            max-width: 600px; 
+            border-radius: 15px; 
+            box-shadow: 0 0 40px rgba(0, 210, 211, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1); 
+            overflow: hidden; 
+            position: relative; 
+            border: 1px solid rgba(255, 215, 0, 0.3); /* Gold Border */
+        }
         
-        /* MAP BUTTON */
+        /* HEADER */
+        .header { 
+            background: linear-gradient(180deg, rgba(5, 11, 20, 0.9), rgba(16, 24, 48, 0.9)), 
+                        url('https://images.unsplash.com/photo-1506318137071-a8bcbf6755dd?q=80&w=1000'); /* Abstract Time/Clock Image */
+            background-size: cover;
+            background-position: center;
+            color: #ffd700; /* Gold Text */
+            padding: 40px 20px; 
+            text-align: center; 
+            border-bottom: 3px solid #ffd700;
+        }
+
+        /* LOGO - Floating Effect */
+        .event-logo {
+            width: 130px; 
+            height: auto;
+            margin: 0 auto 20px auto; 
+            display: block;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)); /* Gold Glow */
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .header h1 { 
+            font-family: 'Courier Prime', monospace; /* Typewriter Font */
+            margin: 0 0 15px; 
+            font-size: 26px; 
+            letter-spacing: 2px; 
+            line-height: 1.4; 
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .header-desc { 
+            font-family: 'Segoe UI', sans-serif;
+            color: #ccc;
+            font-size: 14px; 
+            line-height: 1.6; 
+            margin-bottom: 20px; 
+            max-width: 90%; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+
+        .event-details { 
+            background: rgba(0,0,0,0.4); 
+            border: 1px dashed #ffd700;
+            padding: 15px; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            line-height: 1.8; 
+            text-align: left; 
+            position: relative; 
+            color: #eee;
+        }
+        .event-details strong { color: #00d2d3; /* Cyan for data points */ }
+        
+        /* BUTTONS */
         .map-btn { 
             display: block; 
             width: fit-content;
-            margin: 10px 0 15px 0; 
-            background: white; 
-            color: #0d47a1; 
+            margin: 15px 0 15px 0; 
+            background: transparent; 
+            color: #00d2d3; 
             padding: 8px 15px; 
-            border-radius: 20px; 
+            border: 1px solid #00d2d3;
+            border-radius: 4px; 
             text-decoration: none; 
             font-weight: bold; 
             font-size: 13px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
+            font-family: 'Courier Prime', monospace;
+            transition: all 0.3s;
         }
-        .map-btn:hover { transform: scale(1.05); }
+        .map-btn:hover { background: #00d2d3; color: #000; box-shadow: 0 0 15px rgba(0, 210, 211, 0.5); }
 
-        /* CONTACT SECTION */
-        .contact-section { border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 10px; }
-        .contact-title { font-weight: bold; color: #ffeb3b; margin-bottom: 8px; display: block; }
+        .contact-section { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; margin-top: 10px; }
+        .contact-title { font-weight: bold; color: #ffd700; margin-bottom: 8px; display: block; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
         .contact-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
         .wa-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
+            background: rgba(255,255,255,0.05);
+            color: #ddd;
             text-decoration: none;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 12px;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
             transition: 0.3s;
             display: inline-flex;
             align-items: center;
         }
-        .wa-btn:hover { background: #25D366; border-color: #25D366; color: white; }
+        .wa-btn:hover { border-color: #25D366; color: #25D366; }
 
         .content { padding: 25px; }
 
-        .category-selector { display: flex; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
-        .cat-btn { flex: 1; padding: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .cat-btn.active { background: #0d47a1; color: white; }
+        /* TAB SELECTOR */
+        .category-selector { display: flex; margin-bottom: 20px; border: 1px solid #333; border-radius: 8px; overflow: hidden; background: #0b0d17; }
+        .cat-btn { 
+            flex: 1; 
+            padding: 15px; 
+            border: none; 
+            background: transparent; 
+            color: #777;
+            cursor: pointer; 
+            font-weight: bold; 
+            font-family: 'Courier Prime', monospace;
+            transition: 0.3s; 
+            text-transform: uppercase;
+        }
+        .cat-btn.active { 
+            background: rgba(255, 215, 0, 0.1); 
+            color: #ffd700; 
+            box-shadow: inset 0 -3px 0 #ffd700;
+        }
 
-        /* PRICE BOX */
-        .price-box { background: #e3f2fd; border: 2px dashed #1976d2; padding: 15px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
-        .price-main { font-size: 36px; font-weight: 800; color: #0d47a1; line-height: 1; }
-        .price-sub { font-size: 14px; color: #555; margin-top: 5px; }
-        .price-old { text-decoration: line-through; color: #888; margin-right: 5px; }
+        /* PRICE BOX - Looks like a time machine panel */
+        .price-box { 
+            background: #111; 
+            border: 1px solid #00d2d3; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            position: relative; 
+            box-shadow: inset 0 0 20px rgba(0, 210, 211, 0.1);
+        }
+        .price-main { font-size: 36px; font-weight: 800; color: #00d2d3; font-family: 'Courier Prime', monospace; text-shadow: 0 0 10px rgba(0, 210, 211, 0.4); }
+        .price-sub { font-size: 14px; color: #888; margin-top: 5px; }
+        .price-old { text-decoration: line-through; color: #555; margin-right: 5px; }
         
-        /* NEW: PROMO NOTICE STYLE */
         .promo-expiry {
-            color: #d32f2f;
+            color: #ff4757;
             font-weight: bold;
             font-size: 13px;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #333;
+            letter-spacing: 1px;
             animation: pulse-red 2s infinite;
         }
-        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         /* BADGES */
         .badge-early { 
-            background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
-            animation: pulse 1.5s infinite ease-in-out; 
+            background: rgba(255, 71, 87, 0.2); color: #ff4757; border: 1px solid #ff4757; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
+            text-transform: uppercase;
         }
-        .badge-group { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;}
+        .badge-group { background: rgba(46, 213, 115, 0.2); color: #2ed573; border: 1px solid #2ed573; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;}
         
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        .form-section { margin-bottom: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; }
-        .form-section-title { font-size: 14px; font-weight: bold; color: #777; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        /* FORM INPUTS */
+        .form-section { margin-bottom: 20px; padding: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; }
+        .form-section-title { font-size: 14px; font-family: 'Courier Prime', monospace; color: #ffd700; margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px; }
         
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #aaa; font-size: 13px; letter-spacing: 0.5px; }
         
-        /* Force Uppercase Style */
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            background: #0b0d17; 
+            border: 1px solid #333; 
+            color: #fff;
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', sans-serif;
+            transition: 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        
         .input-name { text-transform: uppercase; }
 
-        .btn-submit { width: 100%; padding: 14px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
-        .btn-submit:hover { background: #1565c0; }
+        /* SUBMIT BUTTON */
+        .btn-submit { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(45deg, #ffd700, #ffa502); 
+            color: #000; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            font-family: 'Courier Prime', monospace;
+            text-transform: uppercase;
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: all 0.3s; 
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); 
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5); filter: brightness(1.1); }
         
-        .info-alert { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; }
+        .info-alert { background: rgba(255, 215, 0, 0.1); color: #ffd700; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; border: 1px solid rgba(255, 215, 0, 0.3); display: flex; align-items: center; gap: 10px; }
         
-        #loading { display: none; text-align: center; padding: 40px 20px; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0d47a1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        #loading { display: none; text-align: center; padding: 40px 20px; color: #ffd700; }
+        .spinner { border: 4px solid rgba(255,215,0,0.1); border-top: 4px solid #ffd700; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* MODAL */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-box { background: white; border-radius: 10px; width: 100%; max-width: 500px; padding: 25px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { border-bottom: 1px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #0d47a1; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-        .summary-list { background: #f9f9f9; padding: 10px; border-radius: 6px; margin: 15px 0; border: 1px solid #eee; }
-        .summary-list-item { border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 13px; line-height: 1.6; }
-        .wa-note { background-color: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 15px; border: 1px solid #c8e6c9; display: none; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-box { background: #101830; border: 1px solid #333; border-radius: 10px; width: 100%; max-width: 500px; padding: 25px; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,0.5); color: #fff;}
+        .modal-header { border-bottom: 1px solid #333; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #ffd700; font-family: 'Courier Prime', monospace; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #ccc; }
+        .summary-list { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin: 15px 0; border: 1px solid #333; }
+        .summary-list-item { border-bottom: 1px solid #333; padding: 10px 0; font-size: 13px; line-height: 1.6; color: #ddd; }
+        .wa-note { background-color: rgba(46, 213, 115, 0.1); color: #2ed573; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 15px; border: 1px solid #2ed573; display: none; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-confirm { flex: 2; background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-cancel { flex: 1; background: #e0e0e0; color: #333; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-confirm { flex: 2; background: #2ed573; color: #000; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-cancel { flex: 1; background: #333; color: #fff; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-cancel:hover { background: #444; }
+        .btn-confirm:hover { background: #26af61; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
+        
+        <img src="https://drive.google.com/uc?export=view&id=1Kr-nLRjQkWp4V9tj1kWNuyIglNNVnwte" alt="MAGS Logo" class="event-logo">
+
         <h1>
             MALAM ANUGERAH GEMILANG SEPULUH<br>
             (MAGS) 2026
         </h1>
         
         <p class="header-desc">
-            MAGS is an annual project organized by JKP ADIN KK10. This year's MAGS will feature several exciting activities including award presentations, performances by guest artists and much more. This meaningful event is hoped to encourage collaboration between college residents and create strong relationships.
+            Journey through time with us. MAGS is an annual project organized by JKP ADIN KK10. This year, we celebrate the past, present, and future with awards, performances, and memories that transcend time.
         </p>
 
         <div class="event-details">
@@ -142,10 +284,10 @@
             <div>⏰ <strong>Time:</strong> 8:00 PM</div>
             <div>📍 <strong>Location:</strong> Vivatel Hotel Kuala Lumpur</div>
             
-            <a href="https://maps.app.goo.gl/u2UQnPPnsGoGe61r5" target="_blank" class="map-btn">📍 Get Directions</a>
+            <a href="https://maps.app.goo.gl/u2UQnPPnsGoGe61r5" target="_blank" class="map-btn">📍 Navigate Coordinates</a>
 
             <div class="contact-section">
-                <span class="contact-title">For any inquiries or concerns, please contact:</span>
+                <span class="contact-title">Mission Control (Inquiries):</span>
                 <div class="contact-buttons">
                     <a href="https://wa.me/60174040164" target="_blank" class="wa-btn">💬 Amir Haziq</a>
                     <a href="https://wa.me/601137311690" target="_blank" class="wa-btn">💬 Akif Zafran</a>
@@ -163,14 +305,14 @@
             </div>
 
             <div class="form-group">
-                <label>Number of Pax (Attendees)</label>
+                <label>Number of Pax (Time Travelers)</label>
                 <select id="paxSelect" onchange="renderFormFields()"></select>
             </div>
 
-            <div class="price-box" id="priceDisplay">Loading...</div>
+            <div class="price-box" id="priceDisplay">Calculating Flux...</div>
 
             <div class="info-alert" id="groupAlert">
-                📢 <strong>Group Registration:</strong> Receipt will be sent to the Lead (Attendee #1).
+                📢 <strong>Group Registration:</strong> Receipt sent to Lead Traveler (Attendee #1).
             </div>
 
             <form id="regForm">
@@ -189,30 +331,30 @@
 
                 <div id="attendeesContainer"></div>
 
-                <button type="submit" class="btn-submit">Proceed to Payment</button>
+                <button type="submit" class="btn-submit">ENGAGE (Proceed to Payment)</button>
             </form>
         </div>
 
         <div id="loading">
             <div class="spinner"></div>
-            <h3>Processing Registration...</h3>
+            <h3>Initiating Sequence...</h3>
         </div>
     </div>
 </div>
 
 <div class="modal-overlay" id="confirmModal">
     <div class="modal-box">
-        <div class="modal-header">Confirm Registration</div>
+        <div class="modal-header">Confirm Launch</div>
         <div class="summary-row"><span class="summary-label">Category:</span><span id="modalCategory"></span></div>
         <div class="summary-row"><span class="summary-label">Total Pax:</span><span id="modalPax"></span></div>
-        <div class="summary-row"><span class="summary-label">Total Price:</span><span style="color: #d32f2f; font-size: 18px;" id="modalPrice"></span></div>
+        <div class="summary-row"><span class="summary-label">Total Price:</span><span style="color: #2ed573; font-size: 18px;" id="modalPrice"></span></div>
 
-        <div style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #555;">Attendee Details:</div>
+        <div style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #ffd700;">Traveler Manifest:</div>
         <div class="summary-list" id="modalAttendeeList"></div>
 
         <div class="wa-note" id="waInfoBox">📲 <strong>WhatsApp Group:</strong> Link will be sent via email.</div>
         <div class="modal-actions">
-            <button type="button" class="btn-cancel" onclick="closeModal()">Edit</button>
+            <button type="button" class="btn-cancel" onclick="closeModal()">Abort</button>
             <button type="button" class="btn-confirm" onclick="processPayment()">Confirm & Pay</button>
         </div>
     </div>
@@ -223,7 +365,7 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpD02rI5SzokpedY-tejB0rnTzdF3J_ikNLFRVYkvKZwH5T5TExPL0J443PGn1A3no/exec';
     
     // Config
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30);
+    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30th 2026
     const PRICES = {
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
@@ -287,13 +429,13 @@
         const pax = parseInt(document.getElementById('paxSelect').value);
         const container = document.getElementById('attendeesContainer');
         container.innerHTML = ''; 
-        document.getElementById('groupAlert').style.display = pax > 1 ? 'block' : 'none';
+        document.getElementById('groupAlert').style.display = pax > 1 ? 'flex' : 'none';
 
         for (let i = 1; i <= pax; i++) {
             const isLead = (i === 1);
             let html = `
             <div class="form-section">
-                <div class="form-section-title">${isLead ? 'Lead Attendee' : 'Attendee #' + i}</div>
+                <div class="form-section-title">${isLead ? 'Lead Traveler' : 'Traveler #' + i}</div>
                 
                 <div class="form-group">
                     <label>Full Name</label>
@@ -341,8 +483,8 @@
                     </select>
                 </div>
                 
-                <div class="form-group" style="background: #e8eaf6; padding: 10px; border-radius: 6px;">
-                    <label style="color: #1a237e; font-size:13px;">🚌 Shuttle Bus (College to Hotel)</label>
+                <div class="form-group" style="background: rgba(0, 210, 211, 0.1); padding: 10px; border-radius: 6px;">
+                    <label style="color: #00d2d3; font-size:13px;">🚌 Shuttle Bus (College to Hotel)</label>
                     <select class="input-shuttle" required>
                         <option value="" disabled selected>Select Option</option>
                         <option value="Yes">Yes, I need the Shuttle Bus</option>
@@ -373,7 +515,6 @@
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
         let html = '';
 
-        // Format Date for Display
         const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
         const dateString = EARLY_BIRD_END_DATE.toLocaleDateString('en-GB', dateOptions);
 
@@ -468,24 +609,24 @@
         names.forEach((name, i) => {
             let details = `<strong>${i + 1}. ${name.value.toUpperCase()}</strong>`;
             if (phones[i]) {
-                details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
+                details += `<br><span style="color:#888;">📞 Phone: ${phones[i].value}</span>`;
             }
             if (currentCategory === 'Student') {
                 if (matrices[i]) {
-                    details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
+                    details += `<br><span style="color:#888;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
                 }
                 if (years[i] && types[i] && faculties[i]) {
-                    details += `<br><span style="color:#555;">🎓 ${years[i].value} | ${types[i].value}</span>`;
-                    details += `<br><span style="color:#555;">🏫 ${faculties[i].value}</span>`;
+                    details += `<br><span style="color:#888;">🎓 ${years[i].value} | ${types[i].value}</span>`;
+                    details += `<br><span style="color:#888;">🏫 ${faculties[i].value}</span>`;
                 }
                 if (shuttles[i]) {
                     let busVal = shuttles[i].value === 'Yes' ? 'Yes (Bus Needed)' : 'No (Own Transport)';
-                    let busColor = shuttles[i].value === 'Yes' ? '#1a237e' : '#555';
+                    let busColor = shuttles[i].value === 'Yes' ? '#00d2d3' : '#888';
                     details += `<br><span style="color:${busColor};">🚌 Shuttle: <b>${busVal}</b></span>`;
                 }
             }
             if (i === 0) {
-                details += `<br><span style="color:#555;">📧 Email: ${email}</span>`;
+                details += `<br><span style="color:#888;">📧 Email: ${email}</span>`;
             }
             listHtml += `<div class="summary-list-item">${details}</div>`;
         });
@@ -539,6 +680,3 @@
 
 </body>
 </html>
-
-
-
