@@ -9,35 +9,29 @@
         
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Cinzel:wght@400;700&family=Segoe+UI:wght@400;600&display=swap');
 
-       /* --- REPLACE YOUR BODY SECTION WITH THIS --- */
-    body { 
-        font-family: 'Segoe UI', sans-serif; 
-        background-color: #f0f2f5; 
-        
-        /* The Grid Pattern */
-        background-image: 
-            linear-gradient(#d1d1d1 1px, transparent 1px),
-            linear-gradient(90deg, #d1d1d1 1px, transparent 1px);
-        
-        /* Size of the squares */
-        background-size: 50px 50px;
-        
-        /* The Animation: moving coordinates */
-        animation: timeFlow 4s linear infinite;
-        
-        color: #333;
-        display: flex; 
-        justify-content: center; 
-        min-height: 100vh; 
-        margin: 0; 
-        padding: 20px; 
-    }
-    
-    /* PASTE THIS RIGHT AFTER THE BODY CLOSING BRACKET "}" */
-    @keyframes timeFlow {
-        0% { background-position: 0 0; }
-        100% { background-position: 50px 50px; }
-    }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            
+            /* BACKGROUND UPDATE: Brushed Alum Dark + Moving Animation */
+            background-color: #e0e0e0; /* Slightly darker base for the texture to pop */
+            background-image: url('https://www.transparenttextures.com/patterns/brushed-alum-dark.png');
+            
+            /* ANIMATION: Moves the texture diagonally */
+            animation: backgroundMove 60s linear infinite;
+            
+            color: #333;
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+        }
+
+        /* The Animation Keyframes */
+        @keyframes backgroundMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 500px 500px; }
+        }
         
         /* Container - The "Mission Report" File */
         .container { 
@@ -51,6 +45,7 @@
             overflow: hidden; 
             position: relative; 
             border-top: 5px solid #c7951d; /* Gold Top Border */
+            z-index: 10; /* Ensures container stays above moving background */
         }
 
         /* HEADER */
@@ -64,13 +59,12 @@
             border-bottom: 2px solid #eee;
         }
 
-        /* LOGO - UPDATED LINK & SIZE */
+        /* LOGO */
         .event-logo {
-            width: 220px; /* Big & Stable */
+            width: 220px; 
             height: auto;
             margin: 0 auto 20px auto; 
             display: block;
-            /* No glow needed for light mode, just a clean drop shadow */
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
         }
         
@@ -81,13 +75,13 @@
             letter-spacing: 1px; 
             line-height: 1.3; 
             text-transform: uppercase;
-            color: #b8860b; /* Dark Goldenrod - Very Readable */
+            color: #b8860b; /* Dark Goldenrod */
             font-weight: 800;
         }
         
         .header-desc { 
             font-family: 'Courier Prime', monospace; 
-            color: #555; /* Dark Grey */
+            color: #555; 
             font-weight: 600;
             font-size: 14px; 
             line-height: 1.6; 
@@ -98,16 +92,16 @@
         }
 
         .event-details { 
-            background: #f8f9fa; /* Very light grey box */
+            background: #f8f9fa; 
             border: 1px solid #ddd;
             padding: 20px; 
             border-radius: 6px; 
             font-size: 14px; 
             line-height: 1.8; 
             text-align: left; 
-            color: #333; /* Dark Text */
+            color: #333; 
         }
-        .event-details strong { color: #008b8b; /* Dark Cyan/Teal */ font-family: 'Courier Prime', monospace; }
+        .event-details strong { color: #008b8b; font-family: 'Courier Prime', monospace; }
         
         /* BUTTONS */
         .map-btn { 
@@ -204,7 +198,7 @@
         }
         .badge-group { background: #e6ffef; color: #26af61; border: 1px solid #26af61; padding: 2px 8px; font-size: 10px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px;}
         
-        /* FORM INPUTS - Light Theme */
+        /* FORM INPUTS */
         .form-section { margin-bottom: 20px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-left: 4px solid #b8860b; border-radius: 4px; }
         .form-section-title { font-size: 14px; font-family: 'Courier Prime', monospace; color: #b8860b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
         
@@ -216,7 +210,7 @@
             padding: 12px; 
             background: #fff; 
             border: 1px solid #ccc; 
-            color: #000; /* Deep Black Text */
+            color: #000; 
             border-radius: 4px;
             box-sizing: border-box; 
             font-family: 'Segoe UI', sans-serif;
@@ -257,7 +251,7 @@
         .spinner { border: 4px solid #eee; border-top: 4px solid #b8860b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* MODAL - Light */
+        /* MODAL */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
         .modal-box { background: #fff; border-radius: 8px; width: 100%; max-width: 500px; padding: 25px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); color: #333;}
         .modal-header { border-bottom: 2px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #b8860b; font-family: 'Cinzel', serif; text-transform: uppercase; }
@@ -280,11 +274,12 @@
         <img src="https://i.imgur.com/DF2gEj9.png" alt="MAGS Logo" class="event-logo">
 
         <h1>
-            MALAM ANUGERAH GEMILANG SEPULUH (MAGS) 2026
+            MALAM ANUGERAH GEMILANG SEPULUH<br>
+            (MAGS) 2026
         </h1>
         
         <p class="header-desc">
-            MAGS is an annual project organized by JKP ADIN KK10. This year, we celebrate the past, present, and future with awards, performances, and memories that transcend time.
+            ARCHIVE RECORD: TEMPORAL ANOMALY. MAGS is an annual project organized by JKP ADIN KK10. This year, we celebrate the past, present, and future with awards, performances, and memories that transcend time.
         </p>
 
         <div class="event-details">
@@ -492,7 +487,7 @@
                 </div>
                 
                 <div class="form-group" style="background: #e0f7fa; padding: 10px; border-radius: 4px;">
-                    <label style="color: #006064; font-size:11px;">🚌 Shuttle Bus</label>
+                    <label style="color: #006064; font-size:11px;">🚌 Shuttle Bus (College to Hotel)</label>
                     <select class="input-shuttle" required>
                         <option value="" disabled selected>Select Option</option>
                         <option value="Yes">Yes, I need the Shuttle Bus</option>
@@ -688,6 +683,3 @@
 
 </body>
 </html>
-
-
-
