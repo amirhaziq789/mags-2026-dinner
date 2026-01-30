@@ -101,7 +101,8 @@
             text-align: left; 
             color: #333; 
         }
-        .event-details strong { color: #008b8b; font-family: 'Courier Prime', monospace; }
+        /* UPDATED: Removed Courier Prime font so it matches the Number of Pax font */
+        .event-details strong { color: #008b8b; }
         
         /* BUTTONS */
         .map-btn { 
@@ -114,7 +115,7 @@
             border: 2px solid #b8860b;
             border-radius: 4px; 
             text-decoration: none; 
-            font-weight: bold; /* This will now look much thicker */
+            font-weight: bold; 
             font-size: 13px; 
             transition: all 0.3s;
             text-transform: uppercase;
@@ -124,6 +125,8 @@
         .contact-section { border-top: 1px dashed #ccc; padding-top: 15px; margin-top: 10px; }
         .contact-title { font-weight: bold; color: #666; margin-bottom: 8px; display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Courier Prime', monospace; }
         .contact-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        /* UPDATED: Made WA Button bold and uppercase to match Map Button */
         .wa-btn {
             background: #fff;
             color: #b8860b;
@@ -131,12 +134,12 @@
             padding: 6px 12px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 13px; /* Increased to match map button */
             border: 1px solid #b8860b;
             transition: 0.3s;
             display: inline-flex;
             align-items: center;
-            font-weight: 600;
+            text-transform: uppercase; /* Added uppercase */
         }
         .wa-btn:hover { border-color: #25D366; color: #25D366; background: #fff; }
 
@@ -683,6 +686,3 @@
 
 </body>
 </html>
-
-
-
