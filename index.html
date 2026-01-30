@@ -9,21 +9,35 @@
         
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Cinzel:wght@400;700&family=Segoe+UI:wght@400;600&display=swap');
 
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: #f0f2f5; /* Light Lab Grey */
-            /* Subtle Grid Background for "Blueprint" feel */
-            background-image: 
-                linear-gradient(#e1e1e1 1px, transparent 1px),
-                linear-gradient(90deg, #e1e1e1 1px, transparent 1px);
-            background-size: 40px 40px;
-            color: #333;
-            display: flex; 
-            justify-content: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 20px; 
-        }
+       /* --- REPLACE YOUR BODY SECTION WITH THIS --- */
+    body { 
+        font-family: 'Segoe UI', sans-serif; 
+        background-color: #f0f2f5; 
+        
+        /* The Grid Pattern */
+        background-image: 
+            linear-gradient(#d1d1d1 1px, transparent 1px),
+            linear-gradient(90deg, #d1d1d1 1px, transparent 1px);
+        
+        /* Size of the squares */
+        background-size: 50px 50px;
+        
+        /* The Animation: moving coordinates */
+        animation: timeFlow 4s linear infinite;
+        
+        color: #333;
+        display: flex; 
+        justify-content: center; 
+        min-height: 100vh; 
+        margin: 0; 
+        padding: 20px; 
+    }
+    
+    /* PASTE THIS RIGHT AFTER THE BODY CLOSING BRACKET "}" */
+    @keyframes timeFlow {
+        0% { background-position: 0 0; }
+        100% { background-position: 50px 50px; }
+    }
         
         /* Container - The "Mission Report" File */
         .container { 
@@ -674,5 +688,6 @@
 
 </body>
 </html>
+
 
 
