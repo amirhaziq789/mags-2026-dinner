@@ -11,12 +11,11 @@
         /* HEADER */
         .header { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 30px 20px; text-align: center; }
         
-        /* UPDATED TITLE STYLE */
         .header h1 { 
             margin: 0 0 15px; 
-            font-size: 24px; /* Slightly smaller to fit the long name */
+            font-size: 24px; 
             letter-spacing: 1px; 
-            line-height: 1.4; /* Better spacing between the two lines */
+            line-height: 1.4; 
             text-transform: uppercase;
         }
         
@@ -72,6 +71,18 @@
         .price-sub { font-size: 14px; color: #555; margin-top: 5px; }
         .price-old { text-decoration: line-through; color: #888; margin-right: 5px; }
         
+        /* NEW: PROMO NOTICE STYLE */
+        .promo-expiry {
+            color: #d32f2f;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
         /* BADGES */
         .badge-early { 
             background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; vertical-align: middle; margin-left: 8px; display: inline-block;
@@ -131,7 +142,7 @@
             <div>⏰ <strong>Time:</strong> 8:00 PM</div>
             <div>📍 <strong>Location:</strong> Vivatel Hotel Kuala Lumpur</div>
             
-            <a href="https://maps.app.goo.gl/apCyAUbCy7ZLnsFZ9" target="_blank" class="map-btn">📍 Get Directions</a>
+            <a href="https://maps.app.goo.gl/YourMapLinkHere" target="_blank" class="map-btn">📍 Get Directions</a>
 
             <div class="contact-section">
                 <span class="contact-title">For any inquiries or concerns, please contact:</span>
@@ -212,7 +223,7 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpD02rI5SzokpedY-tejB0rnTzdF3J_ikNLFRVYkvKZwH5T5TExPL0J443PGn1A3no/exec';
     
     // Config
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30th
+    const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30th 2026
     const PRICES = {
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
@@ -265,7 +276,6 @@
     }
 
     function generateFacultyOptions() {
-        // Default placeholder
         let opts = '<option value="" disabled selected>Select Faculty</option>'; 
         FACULTY_LIST.forEach(f => {
             opts += `<option value="${f}">${f}</option>`;
@@ -332,7 +342,7 @@
                 </div>
                 
                 <div class="form-group" style="background: #e8eaf6; padding: 10px; border-radius: 6px;">
-                    <label style="color: #1a237e; font-size:13px;">🚌 Shuttle Bus</label>
+                    <label style="color: #1a237e; font-size:13px;">🚌 Shuttle Bus (College to Hotel)</label>
                     <select class="input-shuttle" required>
                         <option value="" disabled selected>Select Option</option>
                         <option value="Yes">Yes, I need the Shuttle Bus</option>
@@ -363,6 +373,10 @@
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
         let html = '';
 
+        // Format Date for Display
+        const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+        const dateString = EARLY_BIRD_END_DATE.toLocaleDateString('en-GB', dateOptions);
+
         if (currentCategory === 'Student') {
             let basePrice = PRICES.STUDENT.NORMAL;
             let currentPrice = PRICES.STUDENT.NORMAL;
@@ -375,6 +389,7 @@
                    html = `
                    <div class="price-main">RM${currentPrice * pax} <span class="badge-early">🔥 Early Bird</span></div>
                    <div class="price-sub"><span class="price-old">RM${basePrice * pax}</span> RM${currentPrice} x ${pax} pax <span class="badge-group">GROUP SAVE</span></div>
+                   <div class="promo-expiry">⏳ Offer ends ${dateString}</div>
                    `;
                 } else {
                    html = `
@@ -390,6 +405,7 @@
                     html = `
                     <div class="price-main">RM${currentPrice * pax} <span class="badge-early">🔥 Early Bird</span></div>
                     <div class="price-sub"><span class="price-old">RM${PRICES.STUDENT.NORMAL * pax}</span> RM${currentPrice} x ${pax} pax</div>
+                    <div class="promo-expiry">⏳ Offer ends ${dateString}</div>
                     `;
                 } else {
                     html = `
@@ -421,7 +437,6 @@
     form.addEventListener('submit', e => {
         e.preventDefault();
         
-        // --- 1. VALIDATE REQUIRED FIELDS MANUALLY (Double Check) ---
         if (currentCategory === 'Student') {
             const selects = document.querySelectorAll('select[required]');
             for (let select of selects) {
@@ -439,7 +454,6 @@
         document.getElementById('modalPrice').innerText = "RM" + priceData.totalPrice;
         document.getElementById('waInfoBox').style.display = currentCategory === 'Student' ? 'block' : 'none';
 
-        // Select All Inputs
         const names = document.querySelectorAll('.input-name');
         const phones = document.querySelectorAll('.input-phone');
         const matrices = document.querySelectorAll('.input-matrix');
@@ -452,38 +466,27 @@
         let listHtml = '';
 
         names.forEach((name, i) => {
-            // Start building detail string
             let details = `<strong>${i + 1}. ${name.value.toUpperCase()}</strong>`;
-            
-            // Add Phone
             if (phones[i]) {
                 details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
             }
-
-            // Student Specifics
             if (currentCategory === 'Student') {
                 if (matrices[i]) {
                     details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
                 }
-                
-                // Show new details in Recheck
                 if (years[i] && types[i] && faculties[i]) {
                     details += `<br><span style="color:#555;">🎓 ${years[i].value} | ${types[i].value}</span>`;
                     details += `<br><span style="color:#555;">🏫 ${faculties[i].value}</span>`;
                 }
-
                 if (shuttles[i]) {
                     let busVal = shuttles[i].value === 'Yes' ? 'Yes (Bus Needed)' : 'No (Own Transport)';
                     let busColor = shuttles[i].value === 'Yes' ? '#1a237e' : '#555';
                     details += `<br><span style="color:${busColor};">🚌 Shuttle: <b>${busVal}</b></span>`;
                 }
             }
-
-            // Lead Email
             if (i === 0) {
                 details += `<br><span style="color:#555;">📧 Email: ${email}</span>`;
             }
-
             listHtml += `<div class="summary-list-item">${details}</div>`;
         });
 
@@ -496,11 +499,9 @@
     function processPayment() {
         closeModal();
         
-        // 1. GATHER DATA
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
         
-        // STUDENT DATA
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
         const years = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-year')).map(i => i.value).join('\n') : '-';
         const types = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-type')).map(i => i.value).join('\n') : '-';
@@ -509,7 +510,6 @@
         
         const email = document.querySelector('.input-email').value;
 
-        // 2. FILL HIDDEN INPUTS
         document.getElementById('finalName').value = names;
         document.getElementById('finalPhone').value = phones;
         document.getElementById('finalMatrix').value = matrices;
@@ -519,11 +519,9 @@
         document.getElementById('finalShuttle').value = shuttles; 
         document.getElementById('finalEmail').value = email;
 
-        // 3. SHOW LOADING
         document.getElementById('registrationSection').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
 
-        // 4. SEND TO GOOGLE SCRIPT
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: new FormData(form)})
             .then(response => response.json()) 
             .then(data => {
@@ -541,7 +539,3 @@
 
 </body>
 </html>
-
-
-
-
