@@ -11,14 +11,9 @@
 
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            
-            /* BACKGROUND UPDATE: Brushed Alum Dark + Moving Animation */
-            background-color: #e0e0e0; /* Slightly darker base for the texture to pop */
+            background-color: #e0e0e0; 
             background-image: url('https://www.transparenttextures.com/patterns/diagonal-striped-brick.png');
-            
-            /* ANIMATION: Moves the texture diagonally */
             animation: backgroundMove 60s linear infinite;
-            
             color: #333;
             display: flex; 
             justify-content: center; 
@@ -27,25 +22,21 @@
             padding: 20px; 
         }
 
-        /* The Animation Keyframes */
         @keyframes backgroundMove {
             0% { background-position: 0 0; }
             100% { background-position: 500px 500px; }
         }
         
-        /* Container - The "Mission Report" File */
         .container { 
             background: #ffffff; 
             width: 100%; 
             max-width: 600px; 
             border-radius: 8px; 
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(199, 149, 29, 0.3); /* Gold Outline */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(199, 149, 29, 0.3);
             overflow: hidden; 
             position: relative; 
-            border-top: 5px solid #c7951d; /* Gold Top Border */
-            z-index: 10; /* Ensures container stays above moving background */
+            border-top: 5px solid #c7951d; 
+            z-index: 10; 
         }
 
         /* HEADER */
@@ -59,7 +50,6 @@
             border-bottom: 2px solid #eee;
         }
 
-        /* LOGO */
         .event-logo {
             width: 220px; 
             height: auto;
@@ -75,11 +65,10 @@
             letter-spacing: 1px; 
             line-height: 1.3; 
             text-transform: uppercase;
-            color: #b8860b; /* Dark Goldenrod */
+            color: #b8860b; 
             font-weight: 800;
         }
         
-        /* UPDATED FONT */
         .header-desc { 
             font-family: 'Segoe UI', sans-serif; 
             color: #555; 
@@ -123,7 +112,6 @@
         .map-btn:hover { background: #b8860b; color: #fff; }
 
         .contact-section { border-top: 1px dashed #ccc; padding-top: 15px; margin-top: 10px; }
-        /* UPDATED FONT */
         .contact-title { font-weight: bold; color: #666; margin-bottom: 8px; display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; }
         .contact-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
         
@@ -178,12 +166,10 @@
             box-shadow: 0 5px 15px rgba(0, 139, 139, 0.1);
         }
 
-        /* UPDATED FONT */
         .price-main { font-size: 36px; font-weight: 800; color: #008b8b; font-family: 'Segoe UI', sans-serif; }
         .price-sub { font-size: 14px; color: #666; margin-top: 5px; font-family: 'Segoe UI', sans-serif; }
         .price-old { text-decoration: line-through; color: #999; margin-right: 5px; }
         
-        /* UPDATED FONT */
         .promo-expiry {
             color: #d63031;
             font-weight: bold;
@@ -204,7 +190,6 @@
         
         /* FORM INPUTS */
         .form-section { margin-bottom: 20px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-left: 4px solid #b8860b; border-radius: 4px; }
-        /* UPDATED FONT */
         .form-section-title { font-size: 14px; font-family: 'Segoe UI', sans-serif; color: #b8860b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
         
         .form-group { margin-bottom: 15px; }
@@ -230,8 +215,17 @@
         
         .input-name { text-transform: uppercase; }
 
+        /* PROMO CODE STYLES */
+        .promo-wrapper { display: flex; gap: 10px; }
+        .btn-apply {
+            background: #333; color: #fff; border: none; padding: 0 20px; border-radius: 4px; 
+            cursor: pointer; font-weight: bold; font-family: 'Cinzel', serif; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-apply:hover { background: #b8860b; }
+        #promoMessage { font-size: 13px; margin-top: 5px; font-weight: 700; min-height: 20px; }
+
         /* SUBMIT BUTTON */
-        /* UPDATED FONT */
         .btn-submit { 
             width: 100%; 
             padding: 16px; 
@@ -251,10 +245,8 @@
         }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(184, 134, 11, 0.4); }
         
-        /* UPDATED FONT */
         .info-alert { background: #fff8e1; color: #b8860b; padding: 12px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffe082; display: flex; align-items: center; gap: 10px; font-family: 'Segoe UI', sans-serif; border-radius: 4px; }
         
-        /* UPDATED FONT */
         #loading { display: none; text-align: center; padding: 40px 20px; color: #b8860b; font-family: 'Segoe UI', sans-serif; }
         .spinner { border: 4px solid #eee; border-top: 4px solid #b8860b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -263,15 +255,12 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
         .modal-box { background: #fff; border-radius: 8px; width: 100%; max-width: 500px; padding: 25px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); color: #333;}
         .modal-header { border-bottom: 2px solid #eee; margin-bottom: 15px; padding-bottom: 10px; font-size: 20px; font-weight: bold; color: #b8860b; font-family: 'Cinzel', serif; text-transform: uppercase; }
-        /* UPDATED FONT */
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #555; font-family: 'Segoe UI', sans-serif; }
         .summary-list { background: #f9f9f9; padding: 10px; margin: 15px 0; border: 1px solid #eee; border-radius: 4px; }
         .summary-list-item { border-bottom: 1px dashed #ccc; padding: 10px 0; font-size: 13px; line-height: 1.6; color: #333; }
         .wa-note { background-color: #e6ffef; color: #26af61; padding: 10px; font-size: 12px; margin-top: 15px; border: 1px solid #26af61; display: none; border-radius: 4px; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        /* UPDATED FONT */
         .btn-confirm { flex: 2; background: #2ed573; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; border-radius: 4px; }
-        /* UPDATED FONT */
         .btn-cancel { flex: 1; background: #555; color: #fff; padding: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; border-radius: 4px; }
         .btn-cancel:hover { background: #333; }
         .btn-confirm:hover { background: #26af61; }
@@ -322,6 +311,15 @@
                 <select id="paxSelect" onchange="renderFormFields()"></select>
             </div>
 
+            <div class="form-group">
+                <label>AJK / JTK Access Code (Optional)</label>
+                <div class="promo-wrapper">
+                    <input type="text" id="promoInput" placeholder="Enter ID (e.g. PEN_AMIR_2107)" style="text-transform: uppercase;">
+                    <button type="button" class="btn-apply" onclick="applyPromoCode()">APPLY</button>
+                </div>
+                <div id="promoMessage"></div>
+            </div>
+
             <div class="price-box" id="priceDisplay">Calculating Flux...</div>
 
             <div class="info-alert" id="groupAlert">
@@ -332,6 +330,8 @@
                 <input type="hidden" name="category" id="hiddenCategory">
                 <input type="hidden" name="total_price" id="hiddenTotalPrice">
                 <input type="hidden" name="pax" id="hiddenPax">
+                
+                <input type="hidden" name="promo_code" id="hiddenPromoCode" value="-">
                 
                 <input type="hidden" name="name" id="finalName">
                 <input type="hidden" name="phone" id="finalPhone">
@@ -382,8 +382,43 @@
     const PRICES = {
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
-        ALUMNI: { FIXED: 150 }
+        ALUMNI: { FIXED: 150 },
+        SPECIAL: 80 // New Special Rate
     };
+
+    // --- AJK & JTK LISTS ---
+    const ajkList = [
+        "PEN_AMIR_2107", "TP_AKIF_1990", "TP_IKHWAN_1425", "SU_ALESHA_2502", 
+        "TSU_DHISINAR_5938", "BEN_NURDIBA_0368", "TBEN_OTHMAN_2656", 
+        "ADH_NURHANNANI_7360", "ADH_FATMALA_7387", "ADH_AFIFAH_7366", 
+        "ADH_AISHAH_4657", "ADH_SYIFA_7384", "ADH_EZZYANIE_5202", 
+        "THL_ADAM_2459", "THL_HISYAM_2578", "THL_DELIMA_0139", 
+        "THL_HAZIQ_1539", "THL_IZUAN_1778", "PNP_ERRICSON_3948", 
+        "PNP_AHIDAH_2405", "PNP_AMMIN_4937", "PNP_HAQIMI_1316", 
+        "PNP_AMEERA_5657", "PNP_DANISH_2199", "PNP_NAJWA_4327", 
+        "PNP_NAQILAH_4766", "PNP_HARITH_6167", "LT_SYUKRI_1512", 
+        "LT_HAIKAL_0911", "LT_ARFAN_1348", "LT_HAAFIZ_1006", 
+        "LT_HARITH_1447", "LT_AFIFI_1181", "LT_DANIAL_1598", 
+        "LT_HAZIQ_1116", "LT_QISTINA_5149", "JNP_QIU_5323", 
+        "JNP_JASMINE_5556", "JNP_RABIHAH_0045", "JNP_TASNIM_0082", 
+        "JNP_AUFA_0107", "JNP_AQLIMA_4893", "MUL_FARISH_1763", 
+        "MUL_DANISH_0823", "MUL_PUTERI_0062", "MUL_FIRZANAH_2129", 
+        "MUL_HARLYANIEY_4298", "PUB_DANIAL_5374", "PUB_FARAH_4321", 
+        "PUB_ABU_1268", "PUB_SYAZWANI_9460"
+    ];
+
+    const jtkList = [
+        "PRE_AMMAR_0583", "TP_SYAHIERAH_5521", "SU_NUREEN_2437", 
+        "BEN_WAN_1884", "SEN_MEI_4595", "ADI_DAYANG_0117", 
+        "KEP_ZAINUR_4903", "SUK_AMIR_1730", "KAY_SAKINAH_0173", 
+        "KEM_AZIMAH_5320", "DOM_PHITCIT_3743", "KES_HAZIMI_0212", 
+        "MUL_AZREEL_5797", "TEK_LAU_4540", "PRO_XU_5298", 
+        "DOK_SARANNYA_4563"
+    ];
+
+    // Combine Lists
+    const validPromoCodes = [...ajkList, ...jtkList];
+    let isSpecialRateActive = false;
 
     // Faculty List
     const FACULTY_LIST = [
@@ -436,6 +471,35 @@
             opts += `<option value="${f}">${f}</option>`;
         });
         return opts;
+    }
+
+    // --- PROMO CODE FUNCTION ---
+    function applyPromoCode() {
+        const inputField = document.getElementById('promoInput');
+        const messageBox = document.getElementById('promoMessage');
+        const hiddenPromo = document.getElementById('hiddenPromoCode');
+        const enteredCode = inputField.value.toUpperCase().trim();
+
+        if (validPromoCodes.includes(enteredCode)) {
+            isSpecialRateActive = true;
+            hiddenPromo.value = enteredCode;
+            
+            messageBox.style.color = "#2e7d32"; // Green
+            messageBox.innerHTML = "&#10003; Access Granted. Special Rate Applied.";
+            inputField.style.borderColor = "#2e7d32";
+            inputField.disabled = true; // Lock input
+            
+            updatePrice(); // Recalculate price
+        } else {
+            isSpecialRateActive = false;
+            hiddenPromo.value = "-";
+            
+            messageBox.style.color = "#d32f2f"; // Red
+            messageBox.innerText = "Invalid Access Code.";
+            inputField.style.borderColor = "#d32f2f";
+            
+            updatePrice(); // Reset price
+        }
     }
 
     function renderFormFields() {
@@ -531,7 +595,16 @@
         const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
         const dateString = EARLY_BIRD_END_DATE.toLocaleDateString('en-GB', dateOptions);
 
-        if (currentCategory === 'Student') {
+        // --- SPECIAL RATE CHECK ---
+        if (isSpecialRateActive) {
+            unitPrice = PRICES.SPECIAL;
+            html = `
+            <div class="price-main">RM${unitPrice * pax} <span class="badge-group" style="background:#2e7d32; color:#fff; border:none;">SPECIAL RATE</span></div>
+            <div class="price-sub">RM${unitPrice} x ${pax} pax (AJK/JTK Rate)</div>
+            `;
+        } 
+        // --- STANDARD LOGIC ---
+        else if (currentCategory === 'Student') {
             let basePrice = PRICES.STUDENT.NORMAL;
             let currentPrice = PRICES.STUDENT.NORMAL;
             
@@ -570,6 +643,7 @@
                 unitPrice = currentPrice;
             }
         } else {
+            // ALUMNI
             unitPrice = PRICES.ALUMNI.FIXED;
             html = `
             <div class="price-main">RM${unitPrice * pax}</div>
@@ -603,7 +677,7 @@
         }
 
         const priceData = updatePrice();
-        document.getElementById('modalCategory').innerText = currentCategory;
+        document.getElementById('modalCategory').innerText = currentCategory + (isSpecialRateActive ? " (Special)" : "");
         document.getElementById('modalPax').innerText = document.getElementById('paxSelect').value + " Pax";
         document.getElementById('modalPrice').innerText = "RM" + priceData.totalPrice;
         document.getElementById('waInfoBox').style.display = currentCategory === 'Student' ? 'block' : 'none';
@@ -693,8 +767,3 @@
 
 </body>
 </html>
-
-
-
-
-
