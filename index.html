@@ -219,7 +219,7 @@
 
 <script>
     // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyb-xHm4quK3PAsjX7uJJdd7G1lVFzUTZ-mfEJApYbrNxZJ3UM2uHawr9HdJto6ivOjlg/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAMyrnOviTJFmQHe2T1qSlnjfoNWLOddJnqEJKAN7V5TvEZpA51jXbtYExNQiwqCS1gQ/exec';
     
     // Config
     const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); 
@@ -227,7 +227,8 @@
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
         ALUMNI: { FIXED: 150 },
-        SPECIAL: 80 // RM 80 Flat rate for valid code holders
+        AJK: 75, // Updated AJK Rate
+        JTK: 80  // Updated JTK Rate
     };
 
     // --- AJK & JTK LISTS (Frontend Validation) ---
@@ -260,6 +261,7 @@
         "DOK_SARANNYA_4563"
     ];
 
+    // Combine lists for general validation if needed, but we check specifically in updatePrice
     const validPromoCodes = [...ajkList, ...jtkList];
 
     // Faculty List
@@ -465,7 +467,8 @@
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
         let total = 0;
         
-        let specialCount = 0;
+        let ajkCount = 0;
+        let jtkCount = 0;
         let normalCount = 0;
         
         // 1. Determine Base Rate
@@ -487,9 +490,12 @@
 
                 if (codeInput) {
                     const code = codeInput.value.toUpperCase().trim();
-                    if (validPromoCodes.includes(code)) {
-                        priceForPerson = PRICES.SPECIAL; // 80
-                        specialCount++;
+                    if (ajkList.includes(code)) {
+                        priceForPerson = PRICES.AJK; // 75
+                        ajkCount++;
+                    } else if (jtkList.includes(code)) {
+                        priceForPerson = PRICES.JTK; // 80
+                        jtkCount++;
                     } else {
                         normalCount++;
                     }
@@ -503,8 +509,11 @@
             let htmlMain = `<div class="price-main">RM${total}</div>`;
             let htmlSub = "";
             
-            if (specialCount > 0) {
-                htmlSub += `<div><span class="badge-ajk">AJK/JTK x${specialCount}</span> (RM${PRICES.SPECIAL}/pax)</div>`;
+            if (ajkCount > 0) {
+                htmlSub += `<div><span class="badge-ajk">AJK x${ajkCount}</span> (RM${PRICES.AJK}/pax)</div>`;
+            }
+            if (jtkCount > 0) {
+                htmlSub += `<div><span class="badge-ajk">JTK x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
             }
             if (normalCount > 0) {
                 htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (RM${currentBasePrice}/pax)</div>`;
@@ -529,7 +538,7 @@
         document.getElementById('hiddenPax').value = pax;
         document.getElementById('hiddenCategory').value = currentCategory;
         
-        return { totalPrice: total, specialCount: specialCount, normalCount: normalCount };
+        return { totalPrice: total };
     }
 
     // --- MODAL & SUBMIT ---
@@ -572,8 +581,10 @@
             // Check code for this person
             if (codes[i]) {
                 const cVal = codes[i].value.toUpperCase().trim();
-                if (validPromoCodes.includes(cVal)) {
-                     details += ` <span class="badge-ajk">AJK RATE (RM80)</span>`;
+                if (ajkList.includes(cVal)) {
+                     details += ` <span class="badge-ajk">AJK RATE (RM75)</span>`;
+                } else if (jtkList.includes(cVal)) {
+                     details += ` <span class="badge-ajk">JTK RATE (RM80)</span>`;
                 }
             }
 
