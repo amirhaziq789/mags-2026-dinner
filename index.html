@@ -302,6 +302,17 @@
                 <button type="button" class="cat-btn" onclick="setCategory('Alumni')" id="btnAlumni">Alumni</button>
             </div>
 
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Access Code / Promo Code</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="promo_code" placeholder="Enter Code (e.g. PEN_AMIR_2107)" oninput="this.value = this.value.toUpperCase()">
+                    <button type="button" onclick="checkCode()" style="background: #333; color: white; border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; white-space: nowrap; font-weight: bold; font-family: 'Segoe UI', sans-serif;">
+                        Check Code
+                    </button>
+                </div>
+                <small style="color: #666; font-size: 12px; display:block; margin-top:5px;">Click "Check Code" to auto-fill your details.</small>
+            </div>
+
             <div class="form-group">
                 <label>Number of Pax (Time Travelers)</label>
                 <select id="paxSelect" onchange="renderFormFields()"></select>
@@ -361,7 +372,7 @@
 </div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAMyrnOviTJFmQHe2T1qSlnjfoNWLOddJnqEJKAN7V5TvEZpA51jXbtYExNQiwqCS1gQ/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyb-xHm4quK3PAsjX7uJJdd7G1lVFzUTZ-mfEJApYbrNxZJ3UM2uHawr9HdJto6ivOjlg/exec';
     
     // Config
     const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); // May 30th 2026
@@ -462,9 +473,6 @@
         const pax = parseInt(document.getElementById('paxSelect').value);
         const container = document.getElementById('attendeesContainer');
         
-        // Save existing input values if re-rendering (basic persistence)
-        // Note: For simplicity in this static version, we just clear. 
-        // In a real app we would map values back. For now, we clear to avoid ghosts.
         container.innerHTML = ''; 
         
         document.getElementById('groupAlert').style.display = pax > 1 ? 'flex' : 'none';
@@ -487,12 +495,6 @@
 
             if (currentCategory === 'Student') {
                 html += `
-                <div class="form-group" style="background: #f1f8e9; padding:10px; border-radius:4px; border:1px solid #c8e6c9;">
-                    <label style="color:#2e7d32;">AJK / JTK Access Code (Optional)</label>
-                    <input type="text" class="input-code" id="code_${i}" oninput="validateCode(${i})" placeholder="Enter access ID" style="text-transform: uppercase;">
-                    <div id="code_msg_${i}" class="code-feedback"></div>
-                </div>
-
                 <div class="form-group">
                     <label>Matrix Number</label>
                     <input type="text" class="input-matrix" required placeholder="e.g. S2180000">
@@ -551,25 +553,62 @@
         updatePrice();
     }
 
-    // --- INDIVIDUAL VALIDATION ---
-    function validateCode(index) {
-        const input = document.getElementById(`code_${index}`);
-        const msg = document.getElementById(`code_msg_${index}`);
-        const val = input.value.toUpperCase().trim();
-
-        if (val === "") {
-            input.classList.remove('valid-code', 'invalid-code');
-            msg.innerHTML = "";
-        } else if (validPromoCodes.includes(val)) {
-            input.classList.add('valid-code');
-            input.classList.remove('invalid-code');
-            msg.innerHTML = "<span style='color:#2e7d32'>✓ Special Rate Applied (RM80)</span>";
-        } else {
-            input.classList.add('invalid-code');
-            input.classList.remove('valid-code');
-            msg.innerHTML = "<span style='color:#d32f2f'>Invalid Code</span>";
+    // --- CHECK CODE & AUTOFILL FUNCTION ---
+    function checkCode() {
+        const code = document.getElementById('promo_code').value.trim();
+        if (!code) {
+            alert("Please enter a code first.");
+            return;
         }
-        updatePrice();
+
+        // Show loading state on button
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = "Checking...";
+        btn.disabled = true;
+
+        const SCRIPT_URL = GOOGLE_SCRIPT_URL; // Use the global const
+
+        // We use a workaround for CORS issues with simple GET/POST
+        // We send a POST request with action='check_code'
+        const formData = new FormData();
+        formData.append('action', 'check_code');
+        formData.append('code', code);
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // AUTO-FILL LOGIC - Target the first set of inputs (Lead Traveler)
+                const nameInput = document.querySelector('.input-name');
+                const matrixInput = document.querySelector('.input-matrix');
+                const phoneInput = document.querySelector('.input-phone');
+
+                if (nameInput) nameInput.value = data.data.name || '';
+                if (matrixInput) matrixInput.value = data.data.matrix || '';
+                
+                // Only fill phone if data exists (AJK sheet might have it, JTK might not)
+                if (data.data.phone && phoneInput) {
+                    phoneInput.value = data.data.phone;
+                }
+
+                alert("Code Valid! Details auto-filled.");
+                updatePrice(); // Re-calculate price with the valid code
+            } else {
+                alert(data.message); // Show "Invalid" or "Used" error
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("System Error. Please try again.");
+        })
+        .finally(() => {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
     }
 
     function updatePrice() {
@@ -595,32 +634,21 @@
                 currentBasePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
             }
 
-            // 2. Loop through inputs to calculate total
-            const codeInputs = document.querySelectorAll('.input-code');
-            
-            // Note: If renderFormFields just ran, codeInputs might be empty until DOM updates, 
-            // but since this is called at end of render, it should be fine.
-            // However, we need to be careful about the loop count.
-            
-            // We iterate strictly by pax count
-            for (let i = 1; i <= pax; i++) {
-                const inputEl = document.getElementById(`code_${i}`);
-                let priceForThisPerson = currentBasePrice;
-                
-                if (inputEl) {
-                    const code = inputEl.value.toUpperCase().trim();
-                    if (validPromoCodes.includes(code)) {
-                        priceForThisPerson = PRICES.SPECIAL; // 80
-                        specialCount++;
-                    } else {
-                        normalCount++;
-                    }
-                } else {
-                     // Should not happen, but fallback
-                     normalCount++;
+            // 2. Check the Single Access Code
+            const mainCodeInput = document.getElementById('promo_code');
+            let priceForLead = currentBasePrice;
+
+            if (mainCodeInput) {
+                const code = mainCodeInput.value.toUpperCase().trim();
+                if (validPromoCodes.includes(code)) {
+                    priceForLead = PRICES.SPECIAL; // 80
+                    specialCount = 1; // Only 1 person (lead) gets special rate
                 }
-                total += priceForThisPerson;
             }
+
+            // Calculate total: Lead price + (Pax-1 * BasePrice)
+            total = priceForLead + ((pax - 1) * currentBasePrice);
+            normalCount = pax - specialCount;
 
             // 3. Build HTML Display
             let htmlMain = `<div class="price-main">RM${total}</div>`;
@@ -681,7 +709,9 @@
 
         const names = document.querySelectorAll('.input-name');
         const phones = document.querySelectorAll('.input-phone');
-        const codes = document.querySelectorAll('.input-code'); // Get codes
+        
+        const mainCode = document.getElementById('promo_code').value.toUpperCase().trim(); // Get main code
+        
         const matrices = document.querySelectorAll('.input-matrix');
         const years = document.querySelectorAll('.input-year');
         const types = document.querySelectorAll('.input-type');
@@ -694,14 +724,9 @@
         names.forEach((name, i) => {
             let details = `<strong>${i + 1}. ${name.value.toUpperCase()}</strong>`;
             
-            // Check if this specific person has a valid code
-            let hasSpecial = false;
-            if (codes[i]) {
-                const cVal = codes[i].value.toUpperCase().trim();
-                if (validPromoCodes.includes(cVal)) {
-                    hasSpecial = true;
-                    details += ` <span class="badge-ajk">AJK RATE (RM80)</span>`;
-                }
+            // Check if this is lead (index 0) and has valid code
+            if (i === 0 && validPromoCodes.includes(mainCode)) {
+                 details += ` <span class="badge-ajk">AJK RATE (RM80)</span>`;
             }
 
             if (phones[i]) {
@@ -735,11 +760,20 @@
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
         
-        // Combine Codes into a string. If empty/invalid, put "-"
-        const codes = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-code')).map(i => {
-             let val = i.value.toUpperCase().trim();
-             return validPromoCodes.includes(val) ? val : "-";
-        }).join('\n') : '-';
+        // Single code logic now:
+        // If code is valid, assign to first person. Others get '-'.
+        const mainCode = document.getElementById('promo_code').value.toUpperCase().trim();
+        const pax = parseInt(document.getElementById('paxSelect').value);
+        
+        let codeList = [];
+        for(let i=0; i<pax; i++) {
+            if(i === 0 && validPromoCodes.includes(mainCode)) {
+                codeList.push(mainCode);
+            } else {
+                codeList.push('-');
+            }
+        }
+        const codes = currentCategory === 'Student' ? codeList.join('\n') : '-';
 
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
         const years = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-year')).map(i => i.value).join('\n') : '-';
@@ -779,8 +813,3 @@
 
 </body>
 </html>
-
-
-
-
-
