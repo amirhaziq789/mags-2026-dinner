@@ -315,8 +315,23 @@
             const isLead = (i === 1);
             let html = `
             <div class="form-section">
-                <div class="form-section-title">${isLead ? 'Lead Traveler' : 'Traveler #' + i}</div>
+                <div class="form-section-title">${isLead ? 'Lead Traveler' : 'Traveler #' + i}</div>`;
                 
+            // MOVED TO TOP: ACCESS CODE (Only for Students)
+            if (currentCategory === 'Student') {
+                html += `
+                <div class="form-group" style="background: #f1f8e9; padding:10px; border-radius:4px; border:1px solid #c8e6c9;">
+                    <label style="color:#2e7d32;">Access Code (Optional)</label>
+                    <div class="code-input-wrapper">
+                        <input type="text" id="code_${i}" class="input-code" placeholder="Enter ID" style="text-transform: uppercase;">
+                        <button type="button" class="code-btn" onclick="checkCode(${i})">Check / Fill</button>
+                    </div>
+                    <div id="code_msg_${i}" style="font-size:11px; margin-top:5px; font-weight:bold;"></div>
+                </div>`;
+            }
+
+            // STANDARD FIELDS (Name & Phone)
+            html += `
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" id="name_${i}" class="input-name" oninput="this.value = this.value.toUpperCase()" required placeholder="FULL NAME (AS PER IC)">
@@ -327,17 +342,9 @@
                     <input type="tel" id="phone_${i}" class="input-phone" required placeholder="012-3456789">
                 </div>`;
 
+            // REMAINING STUDENT FIELDS
             if (currentCategory === 'Student') {
                 html += `
-                <div class="form-group" style="background: #f1f8e9; padding:10px; border-radius:4px; border:1px solid #c8e6c9;">
-                    <label style="color:#2e7d32;">Access Code (Optional)</label>
-                    <div class="code-input-wrapper">
-                        <input type="text" id="code_${i}" class="input-code" placeholder="Enter ID" style="text-transform: uppercase;">
-                        <button type="button" class="code-btn" onclick="checkCode(${i})">Check / Fill</button>
-                    </div>
-                    <div id="code_msg_${i}" style="font-size:11px; margin-top:5px; font-weight:bold;"></div>
-                </div>
-
                 <div class="form-group">
                     <label>Matrix Number</label>
                     <input type="text" id="matrix_${i}" class="input-matrix" required placeholder="e.g. S2180000">
