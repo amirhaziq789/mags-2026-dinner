@@ -135,12 +135,12 @@
 
 <div class="container">
     <div class="header">
-        <button type="button" class="status-btn" onclick="openStatusModal()">🔍 Check Registration</button>
         <img src="https://i.imgur.com/DF2gEj9.png" alt="MAGS Logo" class="event-logo">
         <h1>MALAM ANUGERAH GEMILANG SEPULUH (MAGS) 2026</h1>
         <p class="header-desc">
             MAGS is an annual project organized by JKP ADIN KK10. This year, we celebrate the past, present, and future with awards, performances, and memories that transcend time.
         </p>
+        <button type="button" class="status-btn" onclick="openStatusModal()">🔍 Check Registration</button>
 
         <div class="event-details">
             <div>📅 <strong>Date:</strong> 5 June 2026</div>
@@ -369,13 +369,14 @@
                 
                 <div class="form-group">
                     <label>Dietary Requirement</label>
-                    <select id="dietary_${i}" class="input-dietary">
+                    <select id="dietary_${i}" class="input-dietary" onchange="toggleOtherDiet(${i})">
                         <option value="None">None</option>
                         <option value="Vegetarian">Vegetarian</option>
                         <option value="Seafood Allergy">Seafood Allergy</option>
                         <option value="Nut Allergy">Nut Allergy</option>
-                        <option value="Other">Other</option>
+                        <option value="Other">Other (Please Specify)</option>
                     </select>
+                    <input type="text" id="other_diet_${i}" class="input-other-diet" placeholder="Please specify allergy/requirement" style="display:none; margin-top:10px; border: 1px solid #b8860b;">
                 </div>`;
 
             if (currentCategory === 'Student') {
@@ -432,6 +433,20 @@
             container.insertAdjacentHTML('beforeend', html);
         }
         updatePrice();
+    }
+
+    // --- TOGGLE OTHER DIET ---
+    function toggleOtherDiet(index) {
+        const select = document.getElementById(`dietary_${index}`);
+        const input = document.getElementById(`other_diet_${index}`);
+        if (select.value === 'Other') {
+            input.style.display = 'block';
+            input.required = true;
+        } else {
+            input.style.display = 'none';
+            input.required = false;
+            input.value = ''; // Clear if hidden
+        }
     }
 
     // --- CHECK STATUS ---
@@ -587,7 +602,21 @@
         const names = document.querySelectorAll('.input-name');
         const phones = document.querySelectorAll('.input-phone');
         const codes = document.querySelectorAll('.input-code');
-        const diets = document.querySelectorAll('.input-dietary');
+        
+        // Grab values manually for validation display
+        const dietValues = [];
+        const pax = parseInt(document.getElementById('paxSelect').value);
+        for(let i=1; i<=pax; i++) {
+            const sel = document.getElementById(`dietary_${i}`);
+            if (sel) {
+                if (sel.value === 'Other') {
+                    const otherText = document.getElementById(`other_diet_${i}`).value.trim();
+                    dietValues.push("Other: " + (otherText || "Unspecified"));
+                } else {
+                    dietValues.push(sel.value);
+                }
+            }
+        }
         
         const matrices = document.querySelectorAll('.input-matrix');
         const shuttles = document.querySelectorAll('.input-shuttle');
@@ -605,7 +634,7 @@
             }
 
             if (phones[i]) details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
-            if (diets[i]) details += `<br><span style="color:#e67e22;">🍽 Diet: ${diets[i].value}</span>`;
+            if (dietValues[i]) details += `<br><span style="color:#e67e22;">🍽 Diet: ${dietValues[i]}</span>`;
 
             if (currentCategory === 'Student') {
                 if (matrices[i]) details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
@@ -635,7 +664,21 @@
              return validPromoCodes.includes(val) ? val : "-";
         }).join('\n') : '-';
         
-        const dietaries = Array.from(document.querySelectorAll('.input-dietary')).map(i => i.value).join('\n');
+        // Custom Diet Logic Collection
+        const dietaries = [];
+        const pax = parseInt(document.getElementById('paxSelect').value);
+        for(let i=1; i<=pax; i++) {
+            const sel = document.getElementById(`dietary_${i}`);
+            if (sel) {
+                if (sel.value === 'Other') {
+                    const otherText = document.getElementById(`other_diet_${i}`).value.trim();
+                    dietaries.push("Other: " + (otherText || "Unspecified"));
+                } else {
+                    dietaries.push(sel.value);
+                }
+            }
+        }
+        const dietString = dietaries.join('\n');
 
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
         const years = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-year')).map(i => i.value).join('\n') : '-';
@@ -648,7 +691,7 @@
         document.getElementById('finalName').value = names;
         document.getElementById('finalPhone').value = phones;
         document.getElementById('hiddenPromoCode').value = codes; 
-        document.getElementById('hiddenDietary').value = dietaries;
+        document.getElementById('hiddenDietary').value = dietString;
         document.getElementById('finalMatrix').value = matrices;
         document.getElementById('finalYear').value = years;
         document.getElementById('finalType').value = types;
