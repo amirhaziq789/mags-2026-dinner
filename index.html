@@ -60,6 +60,13 @@
         .map-btn { display: block; width: fit-content; margin: 15px 0 15px 0; background: #fff; color: #b8860b; padding: 8px 15px; border: 2px solid #b8860b; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; transition: all 0.3s; }
         .map-btn:hover { background: #b8860b; color: #fff; }
 
+        /* CHECK STATUS BUTTON */
+        .status-btn { 
+            background: transparent; color: #555; border: 1px solid #aaa; padding: 5px 10px; border-radius: 4px; 
+            font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-bottom: 10px; display: inline-block;
+        }
+        .status-btn:hover { background: #eee; }
+
         .contact-section { border-top: 1px dashed #ccc; padding-top: 15px; margin-top: 10px; }
         .contact-title { font-weight: bold; color: #666; margin-bottom: 8px; display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Segoe UI', sans-serif; }
         .contact-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -128,6 +135,7 @@
 
 <div class="container">
     <div class="header">
+        <button type="button" class="status-btn" onclick="openStatusModal()">🔍 Check Registration</button>
         <img src="https://i.imgur.com/DF2gEj9.png" alt="MAGS Logo" class="event-logo">
         <h1>MALAM ANUGERAH GEMILANG SEPULUH (MAGS) 2026</h1>
         <p class="header-desc">
@@ -167,20 +175,12 @@
             <div class="price-box" id="priceDisplay">Calculating Flux...</div>
 
             <div class="info-alert" id="groupAlert" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-                <div>
-                    📢 <strong>Group Registration:</strong> Receipt sent to Lead Traveler (Attendee #1).
-                </div>
-                
+                <div>📢 <strong>Group Registration:</strong> Receipt sent to Lead Traveler (Attendee #1).</div>
                 <div style="width: 100%; border-top: 1px dashed #e6c568; padding-top: 8px; font-size: 12.5px;">
                     <strong style="display: block; margin-bottom: 4px; text-decoration: underline;">Seating Arrangement:</strong>
                     <ul style="margin: 0; padding-left: 20px; list-style-type: disc;">
-                        <li style="margin-bottom: 4px;">
-                            <strong>For group of 3-9:</strong> The table will be set together with group members*.
-                            <br><em style="font-size: 11px; color: #d68f00;">*Depend on vacancy</em>
-                        </li>
-                        <li>
-                            <strong>For group of 10:</strong> A table will automatically set for the group.
-                        </li>
+                        <li style="margin-bottom: 4px;"><strong>For group of 3-9:</strong> The table will be set together with group members*.<br><em style="font-size: 11px; color: #d68f00;">*Depend on vacancy</em></li>
+                        <li><strong>For group of 10:</strong> A table will automatically set for the group.</li>
                     </ul>
                 </div>
             </div>
@@ -191,6 +191,7 @@
                 <input type="hidden" name="pax" id="hiddenPax">
                 
                 <input type="hidden" name="promo_code" id="hiddenPromoCode" value="-">
+                <input type="hidden" name="dietary" id="hiddenDietary" value="-">
                 
                 <input type="hidden" name="name" id="finalName">
                 <input type="hidden" name="phone" id="finalPhone">
@@ -210,6 +211,19 @@
         <div id="loading">
             <div class="spinner"></div>
             <h3>Initiating Sequence...</h3>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="statusModal">
+    <div class="modal-box">
+        <div class="modal-header">Check Registration</div>
+        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter your Matrix Number to check your payment status.</p>
+        <input type="text" id="statusMatrix" placeholder="Matrix Number (e.g. S2180000)" style="margin-bottom: 15px; text-transform: uppercase;">
+        <div id="statusResult" style="margin-bottom: 15px; font-weight: bold; font-size: 14px;"></div>
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeStatusModal()">Close</button>
+            <button type="button" class="btn-confirm" onclick="checkStatus()">Check</button>
         </div>
     </div>
 </div>
@@ -234,7 +248,7 @@
 
 <script>
     // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBjxV2M_8j6dFh9HWGyul3gHOsImueUNT4Nrt0czHJWKX55oQDWH4XE4HQEBWHxI66qQ/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznRaQ3TbpZndOZliR2yadX3Xc6QUvTJtn5Ef8E8_B9OY-45Ec70-7T7aXPvNYUWywKeg/exec';
     
     // Config
     const EARLY_BIRD_END_DATE = new Date(2026, 4, 30); 
@@ -242,11 +256,11 @@
         STUDENT: { EARLY: 90, NORMAL: 100 },
         STUDENT_GROUP: { EARLY: 85, NORMAL: 95, MIN_PAX: 3 }, 
         ALUMNI: { FIXED: 150 },
-        AJK: 75, // Updated AJK Rate
-        JTK: 80  // Updated JTK Rate
+        AJK: 75,
+        JTK: 80
     };
 
-    // --- AJK & JTK LISTS (Frontend Validation) ---
+    // --- ID LISTS ---
     const ajkList = [
         "PEN_AMIR_2107", "TP_AKIF_1990", "TP_IKHWAN_1425", "SU_ALESHA_2502", 
         "TSU_DHISINAR_5938", "BEN_NURDIBA_0368", "TBEN_OTHMAN_2656", 
@@ -276,7 +290,6 @@
         "DOK_SARANNYA_4563"
     ];
 
-    // Combine lists for general validation if needed, but we check specifically in updatePrice
     const validPromoCodes = [...ajkList, ...jtkList];
 
     // Faculty List
@@ -315,16 +328,13 @@
 
     function generateFacultyOptions() {
         let opts = '<option value="" disabled selected>Select Faculty</option>'; 
-        FACULTY_LIST.forEach(f => {
-            opts += `<option value="${f}">${f}</option>`;
-        });
+        FACULTY_LIST.forEach(f => { opts += `<option value="${f}">${f}</option>`; });
         return opts;
     }
 
     function renderFormFields() {
         const pax = parseInt(document.getElementById('paxSelect').value);
         const container = document.getElementById('attendeesContainer');
-        
         container.innerHTML = ''; 
         document.getElementById('groupAlert').style.display = pax > 1 ? 'flex' : 'none';
 
@@ -334,7 +344,6 @@
             <div class="form-section">
                 <div class="form-section-title">${isLead ? 'Lead Traveler' : 'Traveler #' + i}</div>`;
                 
-            // MOVED TO TOP: ACCESS CODE (Only for Students)
             if (currentCategory === 'Student') {
                 html += `
                 <div class="form-group" style="background: #f1f8e9; padding:10px; border-radius:4px; border:1px solid #c8e6c9;">
@@ -347,7 +356,6 @@
                 </div>`;
             }
 
-            // STANDARD FIELDS (Name & Phone)
             html += `
                 <div class="form-group">
                     <label>Full Name</label>
@@ -357,16 +365,25 @@
                 <div class="form-group">
                     <label>Phone Number</label>
                     <input type="tel" id="phone_${i}" class="input-phone" required placeholder="012-3456789">
+                </div>
+                
+                <div class="form-group">
+                    <label>Dietary Requirement</label>
+                    <select id="dietary_${i}" class="input-dietary">
+                        <option value="None">None</option>
+                        <option value="Vegetarian">Vegetarian</option>
+                        <option value="Seafood Allergy">Seafood Allergy</option>
+                        <option value="Nut Allergy">Nut Allergy</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>`;
 
-            // REMAINING STUDENT FIELDS
             if (currentCategory === 'Student') {
                 html += `
                 <div class="form-group">
                     <label>Matrix Number</label>
                     <input type="text" id="matrix_${i}" class="input-matrix" required placeholder="e.g. S2180000">
                 </div>
-
                 <div class="form-group">
                     <label>Year of Study</label>
                     <select class="input-year" required>
@@ -379,7 +396,6 @@
                         <option value="Post Graduate">Post Graduate</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Student Type</label>
                     <select class="input-type" required>
@@ -388,14 +404,12 @@
                         <option value="International Student">International Student</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Faculty</label>
                     <select class="input-faculty" required>
                         ${generateFacultyOptions()}
                     </select>
                 </div>
-                
                 <div class="form-group" style="background: #e0f7fa; padding: 10px; border-radius: 4px;">
                     <label style="color: #006064; font-size:11px;">🚌 Shuttle Bus</label>
                     <select class="input-shuttle" required>
@@ -420,17 +434,40 @@
         updatePrice();
     }
 
-    // --- CHECK CODE & AUTOFILL PER PERSON ---
+    // --- CHECK STATUS ---
+    function openStatusModal() { document.getElementById('statusModal').style.display = 'flex'; }
+    function closeStatusModal() { document.getElementById('statusModal').style.display = 'none'; }
+    
+    function checkStatus() {
+        const m = document.getElementById('statusMatrix').value;
+        const resDiv = document.getElementById('statusResult');
+        if(!m) { alert("Enter Matrix No."); return; }
+        
+        resDiv.innerHTML = "Checking...";
+        const fd = new FormData();
+        fd.append('action', 'check_status');
+        fd.append('matrix_no', m);
+
+        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(d => {
+            if(d.status === 'success') {
+                const color = d.data.status === 'PAID' ? 'green' : (d.data.status === 'PENDING' ? 'orange' : 'red');
+                resDiv.innerHTML = `Name: ${d.data.name}<br>Status: <span style="color:${color}">${d.data.status}</span>`;
+            } else {
+                resDiv.innerHTML = `<span style="color:red">${d.message}</span>`;
+            }
+        });
+    }
+
+    // --- CHECK CODE ---
     function checkCode(index) {
         const codeInput = document.getElementById(`code_${index}`);
         const code = codeInput.value.trim().toUpperCase();
         const msgDiv = document.getElementById(`code_msg_${index}`);
         const btn = event.target;
 
-        if (!code) {
-            alert("Please enter a code first.");
-            return;
-        }
+        if (!code) { alert("Please enter a code first."); return; }
 
         const originalText = btn.innerText;
         btn.innerText = "...";
@@ -440,20 +477,15 @@
         formData.append('action', 'check_code');
         formData.append('code', code);
 
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            body: formData
-        })
+        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData })
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // AUTO-FILL LOGIC FOR SPECIFIC INDEX
                 if(data.data.name) document.getElementById(`name_${index}`).value = data.data.name;
                 if(data.data.matrix) document.getElementById(`matrix_${index}`).value = data.data.matrix;
                 if(data.data.phone && document.getElementById(`phone_${index}`)) {
                     document.getElementById(`phone_${index}`).value = data.data.phone;
                 }
-
                 msgDiv.style.color = "#2e7d32";
                 msgDiv.innerHTML = "✓ Valid Code. Details Auto-filled.";
                 codeInput.style.borderColor = "#2e7d32";
@@ -462,17 +494,10 @@
                 msgDiv.style.color = "#d32f2f";
                 msgDiv.innerHTML = "✗ " + data.message;
                 codeInput.style.borderColor = "#d32f2f";
-                updatePrice(); // Re-calc to remove potential invalid discount
+                updatePrice(); 
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Connection Error. Please try again.");
-        })
-        .finally(() => {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        });
+        .finally(() => { btn.innerText = originalText; btn.disabled = false; });
     }
 
     function updatePrice() {
@@ -486,7 +511,6 @@
         let jtkCount = 0;
         let normalCount = 0;
         
-        // 1. Determine Base Rate
         let currentBasePrice = PRICES.STUDENT.NORMAL;
         let baseType = "Individual";
 
@@ -498,7 +522,6 @@
                 currentBasePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
             }
 
-            // 2. Loop through all inputs to calc price
             for (let i = 1; i <= pax; i++) {
                 const codeInput = document.getElementById(`code_${i}`);
                 let priceForPerson = currentBasePrice;
@@ -506,10 +529,10 @@
                 if (codeInput) {
                     const code = codeInput.value.toUpperCase().trim();
                     if (ajkList.includes(code)) {
-                        priceForPerson = PRICES.AJK; // 75
+                        priceForPerson = PRICES.AJK; 
                         ajkCount++;
                     } else if (jtkList.includes(code)) {
-                        priceForPerson = PRICES.JTK; // 80
+                        priceForPerson = PRICES.JTK; 
                         jtkCount++;
                     } else {
                         normalCount++;
@@ -520,43 +543,28 @@
                 total += priceForPerson;
             }
 
-            // 3. Build HTML Display
             let htmlMain = `<div class="price-main">RM${total}</div>`;
             let htmlSub = "";
             
-            if (ajkCount > 0) {
-                htmlSub += `<div><span class="badge-ajk">AJK x${ajkCount}</span> (RM${PRICES.AJK}/pax)</div>`;
-            }
-            if (jtkCount > 0) {
-                htmlSub += `<div><span class="badge-ajk">JTK x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
-            }
-            if (normalCount > 0) {
-                htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (RM${currentBasePrice}/pax)</div>`;
-            }
-            if (isEarlyBird) {
-                htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">🔥 Early Bird Active</div>`;
-            }
+            if (ajkCount > 0) htmlSub += `<div><span class="badge-ajk">AJK x${ajkCount}</span> (RM${PRICES.AJK}/pax)</div>`;
+            if (jtkCount > 0) htmlSub += `<div><span class="badge-ajk">JTK x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
+            if (normalCount > 0) htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (RM${currentBasePrice}/pax)</div>`;
+            if (isEarlyBird) htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">🔥 Early Bird Active</div>`;
 
             display.innerHTML = htmlMain + `<div class="price-sub">${htmlSub}</div>`;
 
         } else {
-            // ALUMNI
             let unitPrice = PRICES.ALUMNI.FIXED;
             total = unitPrice * pax;
-            display.innerHTML = `
-            <div class="price-main">RM${total}</div>
-            <div class="price-sub">Alumni Rate (RM${unitPrice} x ${pax})</div>
-            `;
+            display.innerHTML = `<div class="price-main">RM${total}</div><div class="price-sub">Alumni Rate (RM${unitPrice} x ${pax})</div>`;
         }
 
         document.getElementById('hiddenTotalPrice').value = total;
         document.getElementById('hiddenPax').value = pax;
         document.getElementById('hiddenCategory').value = currentCategory;
-        
         return { totalPrice: total };
     }
 
-    // --- MODAL & SUBMIT ---
     const form = document.getElementById('regForm');
     const modal = document.getElementById('confirmModal');
 
@@ -566,11 +574,7 @@
         if (currentCategory === 'Student') {
             const selects = document.querySelectorAll('select[required]');
             for (let select of selects) {
-                if (select.value === "") {
-                    alert("Please fill in all details for all students.");
-                    select.focus();
-                    return;
-                }
+                if (select.value === "") { alert("Please fill in all details."); select.focus(); return; }
             }
         }
 
@@ -583,6 +587,7 @@
         const names = document.querySelectorAll('.input-name');
         const phones = document.querySelectorAll('.input-phone');
         const codes = document.querySelectorAll('.input-code');
+        const diets = document.querySelectorAll('.input-dietary');
         
         const matrices = document.querySelectorAll('.input-matrix');
         const shuttles = document.querySelectorAll('.input-shuttle');
@@ -593,31 +598,23 @@
         names.forEach((name, i) => {
             let details = `<strong>${i + 1}. ${name.value.toUpperCase()}</strong>`;
             
-            // Check code for this person
             if (codes[i]) {
                 const cVal = codes[i].value.toUpperCase().trim();
-                if (ajkList.includes(cVal)) {
-                     details += ` <span class="badge-ajk">AJK RATE (RM75)</span>`;
-                } else if (jtkList.includes(cVal)) {
-                     details += ` <span class="badge-ajk">JTK RATE (RM80)</span>`;
-                }
+                if (ajkList.includes(cVal)) details += ` <span class="badge-ajk">AJK (RM${PRICES.AJK})</span>`;
+                else if (jtkList.includes(cVal)) details += ` <span class="badge-ajk">JTK (RM${PRICES.JTK})</span>`;
             }
 
-            if (phones[i]) {
-                details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
-            }
+            if (phones[i]) details += `<br><span style="color:#555;">📞 Phone: ${phones[i].value}</span>`;
+            if (diets[i]) details += `<br><span style="color:#e67e22;">🍽 Diet: ${diets[i].value}</span>`;
+
             if (currentCategory === 'Student') {
-                if (matrices[i]) {
-                    details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
-                }
+                if (matrices[i]) details += `<br><span style="color:#555;">🆔 Matrix: ${matrices[i].value.toUpperCase()}</span>`;
                 if (shuttles[i]) {
                     let busVal = shuttles[i].value === 'Yes' ? 'Yes (Bus Needed)' : 'No';
                     details += `<br><span style="color:#006064;">🚌 Shuttle: ${busVal}</span>`;
                 }
             }
-            if (i === 0) {
-                details += `<br><span style="color:#555;">📧 Email: ${email}</span>`;
-            }
+            if (i === 0) details += `<br><span style="color:#555;">📧 Email: ${email}</span>`;
             listHtml += `<div class="summary-list-item">${details}</div>`;
         });
 
@@ -633,11 +630,12 @@
         const names = Array.from(document.querySelectorAll('.input-name')).map(i => i.value.toUpperCase()).join('\n'); 
         const phones = Array.from(document.querySelectorAll('.input-phone')).map(i => i.value).join('\n');
         
-        // Collect all codes
         const codes = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-code')).map(i => {
              let val = i.value.toUpperCase().trim();
              return validPromoCodes.includes(val) ? val : "-";
         }).join('\n') : '-';
+        
+        const dietaries = Array.from(document.querySelectorAll('.input-dietary')).map(i => i.value).join('\n');
 
         const matrices = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-matrix')).map(i => i.value).join('\n') : '-';
         const years = currentCategory === 'Student' ? Array.from(document.querySelectorAll('.input-year')).map(i => i.value).join('\n') : '-';
@@ -650,6 +648,7 @@
         document.getElementById('finalName').value = names;
         document.getElementById('finalPhone').value = phones;
         document.getElementById('hiddenPromoCode').value = codes; 
+        document.getElementById('hiddenDietary').value = dietaries;
         document.getElementById('finalMatrix').value = matrices;
         document.getElementById('finalYear').value = years;
         document.getElementById('finalType').value = types;
@@ -677,7 +676,3 @@
 
 </body>
 </html>
-
-
-
-
