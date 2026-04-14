@@ -521,34 +521,42 @@
         const today = new Date();
         const display = document.getElementById('priceDisplay');
         let isEarlyBird = today <= EARLY_BIRD_END_DATE;
+        
         let total = 0;
+        let originalTotal = 0; // NEW: Track the price without early bird discount
         
         let ajkCount = 0;
         let jtkCount = 0;
         let normalCount = 0;
         
         let currentBasePrice = PRICES.STUDENT.NORMAL;
+        let normalBasePrice = PRICES.STUDENT.NORMAL; // NEW: Track normal base price for per-pax display
         let baseType = "Individual";
 
         if (currentCategory === 'Student') {
             if (pax >= PRICES.STUDENT_GROUP.MIN_PAX) {
                 currentBasePrice = isEarlyBird ? PRICES.STUDENT_GROUP.EARLY : PRICES.STUDENT_GROUP.NORMAL;
+                normalBasePrice = PRICES.STUDENT_GROUP.NORMAL; 
                 baseType = "Group";
             } else {
                 currentBasePrice = isEarlyBird ? PRICES.STUDENT.EARLY : PRICES.STUDENT.NORMAL;
+                normalBasePrice = PRICES.STUDENT.NORMAL; 
             }
 
             for (let i = 1; i <= pax; i++) {
                 const codeInput = document.getElementById(`code_${i}`);
                 let priceForPerson = currentBasePrice;
+                let originalPriceForPerson = normalBasePrice; 
 
                 if (codeInput) {
                     const code = codeInput.value.toUpperCase().trim();
                     if (ajkList.includes(code)) {
                         priceForPerson = PRICES.AJK; 
+                        originalPriceForPerson = PRICES.AJK; // AJK doesn't have early bird, so original is same
                         ajkCount++;
                     } else if (jtkList.includes(code)) {
                         priceForPerson = PRICES.JTK; 
+                        originalPriceForPerson = PRICES.JTK; // JTK doesn't have early bird
                         jtkCount++;
                     } else {
                         normalCount++;
@@ -557,14 +565,30 @@
                     normalCount++;
                 }
                 total += priceForPerson;
+                originalTotal += originalPriceForPerson; 
             }
 
-            let htmlMain = `<div class="price-main">RM${total}</div>`;
+            // MODIFIED: Show slashed original total if Early Bird is active and giving a discount
+            let htmlMain = `<div class="price-main">`;
+            if (isEarlyBird && originalTotal > total) {
+                htmlMain += `<span class="price-old" style="font-size: 24px; font-weight: 600;">RM${originalTotal}</span>`;
+            }
+            htmlMain += `RM${total}</div>`;
+
             let htmlSub = "";
             
             if (ajkCount > 0) htmlSub += `<div><span class="badge-ajk">AJK x${ajkCount}</span> (RM${PRICES.AJK}/pax)</div>`;
             if (jtkCount > 0) htmlSub += `<div><span class="badge-ajk">JTK x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
-            if (normalCount > 0) htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (RM${currentBasePrice}/pax)</div>`;
+            
+            // MODIFIED: Show slashed per-pax price in the subtext
+            if (normalCount > 0) {
+                if (isEarlyBird) {
+                    htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (<span class="price-old">RM${normalBasePrice}</span> RM${currentBasePrice}/pax)</div>`;
+                } else {
+                    htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (RM${currentBasePrice}/pax)</div>`;
+                }
+            }
+            
             if (isEarlyBird) htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">🔥 Early Bird Active until 10th May 2026!</div>`;
 
             display.innerHTML = htmlMain + `<div class="price-sub">${htmlSub}</div>`;
