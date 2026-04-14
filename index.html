@@ -139,7 +139,7 @@
         <img src="https://i.postimg.cc/Dz26GpZg/Untitled-design-(15).png" alt="MAGS Logo" class="event-logo">
         <h1>MALAM ANUGERAH GEMILANG SEPULUH (MAGS) 2026</h1>
         <p class="header-desc">
-            MAGS is an annual project organized by JKP ADIN KK10. This year, we celebrate the past, present, and future with awards, performances, and memories that transcend time.
+            MAGS is an annual project organized by Jawatankuasa Kerja Perkembangan Akademik & Intelektual, Kolej Kediaman Tun Ahmad Zaidi, KK10. This year, we celebrate the past, present, and future with awards, performances, and memories that transcend time.
         </p>
         <button type="button" class="status-btn" onclick="openStatusModal()">🔍 Check Registration</button>
 
@@ -252,7 +252,7 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtUFWDFCBq95sq6Gu-2CFmWoWu5yt6zTM1qI7duIN2VcRt6ej13qOMoQVYcNrR1luFjQ/exec';
     
     // Config
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 20); 
+    const EARLY_BIRD_END_DATE = new Date(2026, 4, 11); 
     const PRICES = {
         STUDENT: { EARLY: 100, NORMAL: 120 },
         STUDENT_GROUP: { EARLY: 95, NORMAL: 115, MIN_PAX: 3 }, 
@@ -565,7 +565,7 @@
             if (ajkCount > 0) htmlSub += `<div><span class="badge-ajk">AJK x${ajkCount}</span> (RM${PRICES.AJK}/pax)</div>`;
             if (jtkCount > 0) htmlSub += `<div><span class="badge-ajk">JTK x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
             if (normalCount > 0) htmlSub += `<div><span class="badge-group">${baseType} x${normalCount}</span> (RM${currentBasePrice}/pax)</div>`;
-            if (isEarlyBird) htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">🔥 Early Bird Active</div>`;
+            if (isEarlyBird) htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">🔥 Early Bird Active until 10th May!</div>`;
 
             display.innerHTML = htmlMain + `<div class="price-sub">${htmlSub}</div>`;
 
