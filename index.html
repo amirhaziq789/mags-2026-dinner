@@ -165,6 +165,11 @@
     </div>
 
     <div class="content">
+        <div id="closedMessage" style="display: none; text-align: center; padding: 50px 20px;">
+    <h1 style="color: #ff4757; font-family: 'Cinzel', serif;">Registration Closed</h1>
+    <p style="font-size: 18px; margin-top: 20px;">Thank you for your interest! The registration period for MAGS 2026 has officially ended.</p>
+    <p style="font-size: 16px; margin-top: 10px; color: #666;">If you have any questions or need assistance, please contact our support team.</p>
+    </div>
         <div id="registrationSection">
             <div class="category-selector">
                 <button type="button" class="cat-btn active" onclick="setCategory('Student')" id="btnStudent">Student</button>
@@ -251,6 +256,22 @@
 </div>
 
 <script>
+    // ================= DEADLINE CHECKER =================
+    // Set your exact closing date and time here! 
+    // Format: "YYYY-MM-DDTHH:MM:SS+08:00" (+08:00 is Malaysia Time)
+    const deadlineString = "2026-05-03T23:59:59+08:00"; 
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        const deadlineDate = new Date(deadlineString);
+        const currentDate = new Date();
+
+        if (currentDate >= deadlineDate) {
+            // If the current time is past the deadline, hide the form and show the closed message
+            document.getElementById('registrationSection').style.display = 'none';
+            document.getElementById('closedMessage').style.display = 'block';
+        }
+    });
+    
     // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynI2QszpTLFsQiD3Nd6az5TOkOtezz2e9JpOOxDaa02wI99Z2WFMG-mnMGkF1ZcRXeTQ/exec';
     
