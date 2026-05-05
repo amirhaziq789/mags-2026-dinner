@@ -88,19 +88,21 @@
             font-size: 2.5rem;
             font-weight: bold;
             color: #fff;
-            text-shadow: 0 0 20px #ff00ff, 0 0 40px #00e5ff;
+            text-shadow: 0.5px 0 0 #ff00ff, -0.5px 0 0 #00e5ff; /* Start with chromatic effect */
             margin-top: 30px;
             letter-spacing: 3px;
             z-index: 10;
         }
 
+        /* Applied upon completion */
         body.time-warp #board-container {
-            border-radius: 30px; /* Changed to rounded edges */
-            overflow: hidden; /* Ensures the inner pieces don't poke out of the rounded corners */
-            animation: pop-glow 2s forwards;
-            box-shadow: 0 0 100px #ff00ff, 0 0 200px #00e5ff;
+            border-radius: 30px; /* Rounded edges for final logo */
+            overflow: hidden;
             border: none;
             padding: 0;
+            /* Combine a quick intense glitch phase with the stabilized glow and pop */
+            animation: interface-glitch 0.4s 2 ease-in-out, pop-glow 2s forwards;
+            box-shadow: 0 0 100px #ff00ff, 0 0 200px #00e5ff;
         }
 
         body.time-warp #puzzle-board {
@@ -111,16 +113,38 @@
             border-radius: 0;
         }
 
-        /* Changed vortex to a pop-glow so the rounded square looks clean */
+        /* Continuous glitch effect for success message */
+        body.time-warp #success-message {
+            display: block;
+            animation: glitch-text 1.5s infinite alternate ease-in-out; 
+        }
+
+        /* === NEW GLITCH ANIMATIONS === */
+
+        /* Intense chromatic distortion for text */
+        @keyframes glitch-text {
+            0% { text-shadow: 0.5px 0 0 #ff00ff, -0.5px 0 0 #00e5ff; transform: translate(0); }
+            4% { text-shadow: 2px 0 0 #ff00ff, -2px 0 0 #00e5ff; transform: translate(-2px, 1px); }
+            8% { text-shadow: -2px 0 0 #ff00ff, 2px 0 0 #00e5ff; transform: translate(2px, -1px); }
+            12% { text-shadow: 0.5px 0 0 #ff00ff, -0.5px 0 0 #00e5ff; transform: translate(0); }
+            100% { text-shadow: 0.5px 0 0 #ff00ff, -0.5px 0 0 #00e5ff; transform: translate(0); }
+        }
+
+        /* Distortion and filtering for containers */
+        @keyframes interface-glitch {
+            0% { transform: skew(0deg) scale(1); filter: hue-rotate(0deg); opacity: 1; }
+            5% { transform: skew(3deg) scale(1.03); filter: hue-rotate(90deg); opacity: 0.8; }
+            10% { transform: skew(-3deg) scale(1); filter: hue-rotate(0deg); opacity: 1; }
+            15% { transform: skew(1.5deg) scale(1.05); filter: hue-rotate(-90deg); opacity: 0.9; }
+            20% { transform: skew(0deg) scale(1); filter: hue-rotate(0deg); opacity: 1; }
+            100% { transform: skew(0deg) scale(1); filter: hue-rotate(0deg); opacity: 1; }
+        }
+
+        /* Established pop animation */
         @keyframes pop-glow {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.1); opacity: 0.9; }
             100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.7; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.05); }
         }
 
         /* --- FIREWORKS CANVAS --- */
@@ -241,14 +265,12 @@
         function executeGimmick() {
             isLocked = true; 
             
-            // Trigger CSS animations
+            // Trigger CSS animations (now including immediate intense glitch)
             document.body.classList.add('time-warp');
             
             // Update UI
             document.getElementById('instruction-text').style.display = 'none';
-            const msg = document.getElementById('success-message');
-            msg.style.display = 'block';
-            msg.style.animation = 'pulse 1s infinite alternate';
+            // Start the infinite glitch text animation (applied via CSS class above)
 
             // Start Fireworks!
             startFireworks();
