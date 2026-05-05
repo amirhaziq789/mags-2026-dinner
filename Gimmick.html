@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Time Travel Dinner Gimmick</title>
+    <style>
+        /* --- THEME & STYLING --- */
+        body {
+            background-color: #05010a;
+            color: #00e5ff;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0, 229, 255, 0.1) 0%, transparent 50%);
+        }
+
+        h1 {
+            text-shadow: 0 0 15px #00e5ff;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        p.instructions {
+            color: #ff00ff;
+            text-shadow: 0 0 5px #ff00ff;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+
+        /* --- PUZZLE BOARD --- */
+        /* Responsive board size optimized for iPad */
+        #board-container {
+            width: min(80vw, 600px);
+            height: min(80vw, 600px);
+            background-color: #1a0b2e;
+            padding: 5px;
+            border: 2px solid #00e5ff;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+            border-radius: 10px;
+            transition: all 1.5s ease-in-out;
+        }
+
+        #puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .piece {
+            background-size: 300% 300%; /* 3x3 grid means background must be 300% */
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+            border-radius: 5px;
+        }
+
+        .piece:active {
+            transform: scale(0.95);
+        }
+
+        /* Highlight when a piece is tapped for swapping */
+        .piece.selected {
+            transform: scale(0.90);
+            box-shadow: 0 0 20px #ff00ff;
+            border: 3px solid #ff00ff;
+            z-index: 10;
+        }
+
+        /* --- GIMMICK EXECUTION ANIMATIONS --- */
+        #success-message {
+            display: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 20px #ff00ff, 0 0 40px #00e5ff;
+            margin-top: 30px;
+            letter-spacing: 3px;
+        }
+
+        /* Triggered when puzzle is solved */
+        body.time-warp #board-container {
+            border-radius: 50%;
+            animation: vortex 3s forwards;
+            box-shadow: 0 0 100px #ff00ff, 0 0 200px #00e5ff;
+            border: none;
+            padding: 0;
+        }
+
+        body.time-warp #puzzle-board {
+            gap: 0; /* Remove gaps so the logo becomes seamless */
+        }
+
+        body.time-warp .piece {
+            border-radius: 0;
+        }
+
+        @keyframes vortex {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(360deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(720deg); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>TEMPORAL LOCK</h1>
+    <p class="instructions" id="instruction-text">Tap two pieces to swap them and realign the timeline.</p>
+
+    <div id="board-container">
+        <div id="puzzle-board"></div>
+    </div>
+
+    <div id="success-message">TIMELINE RESTORED</div>
+
+    <script>
+        // ==========================================
+        // 1. SETUP: PUT YOUR DIRECT LOGO LINK HERE
+        // ==========================================
+        // For testing, I put a placeholder time-travel clock. Replace it!
+        const LOGO_URL = 'https://images.unsplash.com/photo-1501139083538-0139583c060f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'; 
+        
+        // Grid setup (3x3 puzzle)
+        const GRID_SIZE = 3; 
+        const TOTAL_PIECES = GRID_SIZE * GRID_SIZE;
+        const board = document.getElementById('puzzle-board');
+        
+        let pieces = [];
+        let selectedPiece = null;
+        let isLocked = false; // Locks the board when won
+
+        // ==========================================
+        // 2. INITIALIZE THE PUZZLE
+        // ==========================================
+        function initPuzzle() {
+            // Create the correct order array
+            let correctOrder = Array.from({length: TOTAL_PIECES}, (_, i) => i);
+            
+            // Shuffle the order
+            let shuffledOrder = [...correctOrder].sort(() => Math.random() - 0.5);
+
+            // Create DOM elements for pieces
+            shuffledOrder.forEach((originalIndex, currentIndex) => {
+                const piece = document.createElement('div');
+                piece.classList.add('piece');
+                
+                // Set the background image to your logo
+                piece.style.backgroundImage = `url('${LOGO_URL}')`;
+                
+                // Calculate which part of the image this piece shows using percentages
+                // This makes it perfectly responsive to the iPad screen size
+                const row = Math.floor(originalIndex / GRID_SIZE);
+                const col = originalIndex % GRID_SIZE;
+                
+                const bgPosX = (col / (GRID_SIZE - 1)) * 100;
+                const bgPosY = (row / (GRID_SIZE - 1)) * 100;
+                
+                piece.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+                
+                // Store data to track win condition
+                piece.dataset.originalIndex = originalIndex;
+                piece.dataset.currentIndex = currentIndex;
+                
+                // Add Tap/Click event
+                piece.addEventListener('click', () => handlePieceTap(piece));
+                
+                board.appendChild(piece);
+                pieces.push(piece);
+            });
+        }
+
+        // ==========================================
+        // 3. INTERACTIVITY: TAP TO SWAP
+        // ==========================================
+        function handlePieceTap(piece) {
+            if (isLocked) return;
+
+            if (!selectedPiece) {
+                // First piece tapped
+                selectedPiece = piece;
+                piece.classList.add('selected');
+            } else {
+                // Second piece tapped - swap them!
+                if (selectedPiece !== piece) {
+                    swapPieces(selectedPiece, piece);
+                }
+                selectedPiece.classList.remove('selected');
+                selectedPiece = null;
+            }
+        }
+
+        function swapPieces(piece1, piece2) {
+            // Swap in the DOM
+            const tempNode = document.createElement('div');
+            board.insertBefore(tempNode, piece1);
+            board.insertBefore(piece1, piece2);
+            board.insertBefore(piece2, tempNode);
+            board.removeChild(tempNode);
+
+            // Swap their tracked indices
+            const tempIndex = piece1.dataset.currentIndex;
+            piece1.dataset.currentIndex = piece2.dataset.currentIndex;
+            piece2.dataset.currentIndex = tempIndex;
+
+            // Check if solved
+            checkWinCondition();
+        }
+
+        // ==========================================
+        // 4. THE GIMMICK (WIN CONDITION)
+        // ==========================================
+        function checkWinCondition() {
+            // Get current pieces from the DOM (they reordered during swap)
+            const currentDOMPieces = Array.from(board.children);
+            
+            // Check if every piece is in its original intended spot
+            const isSolved = currentDOMPieces.every((piece, index) => {
+                return parseInt(piece.dataset.originalIndex) === index;
+            });
+
+            if (isSolved) {
+                executeGimmick();
+            }
+        }
+
+        function executeGimmick() {
+            isLocked = true; // Prevent further tapping
+            
+            // Trigger the Time Warp CSS animations
+            document.body.classList.add('time-warp');
+            
+            // Update UI
+            document.getElementById('instruction-text').style.display = 'none';
+            
+            const msg = document.getElementById('success-message');
+            msg.style.display = 'block';
+            msg.style.animation = 'pulse 1s infinite alternate';
+
+            // Optional: You could play a sound effect here
+            // const audio = new Audio('time-travel-sound.mp3');
+            // audio.play();
+        }
+
+        // Start the engine
+        window.onload = initPuzzle;
+    </script>
+</body>
+</html>
