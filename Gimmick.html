@@ -95,8 +95,9 @@
         }
 
         body.time-warp #board-container {
-            border-radius: 50%;
-            animation: vortex 3s forwards;
+            border-radius: 30px; /* Changed to rounded edges */
+            overflow: hidden; /* Ensures the inner pieces don't poke out of the rounded corners */
+            animation: pop-glow 2s forwards;
             box-shadow: 0 0 100px #ff00ff, 0 0 200px #00e5ff;
             border: none;
             padding: 0;
@@ -110,10 +111,11 @@
             border-radius: 0;
         }
 
-        @keyframes vortex {
-            0% { transform: scale(1) rotate(0deg); opacity: 1; }
-            50% { transform: scale(1.1) rotate(360deg); opacity: 0.8; }
-            100% { transform: scale(1) rotate(720deg); opacity: 1; }
+        /* Changed vortex to a pop-glow so the rounded square looks clean */
+        @keyframes pop-glow {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         @keyframes pulse {
@@ -253,7 +255,7 @@
         }
 
         // ==========================================
-        // 5. FIREWORKS SYSTEM
+        // 5. FIREWORKS SYSTEM (UPGRADED)
         // ==========================================
         const fwCanvas = document.getElementById('fireworks-canvas');
         const ctx = fwCanvas.getContext('2d');
@@ -272,12 +274,14 @@
                 this.y = y;
                 this.color = color;
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 6 + 2;
+                // Increased speed for faster bursts
+                const speed = Math.random() * 15 + 5; 
                 this.vx = Math.cos(angle) * speed;
                 this.vy = Math.sin(angle) * speed;
                 this.alpha = 1;
-                this.decay = Math.random() * 0.015 + 0.01; 
-                this.gravity = 0.05; 
+                // Adjusted decay so they travel further before fading
+                this.decay = Math.random() * 0.03 + 0.01; 
+                this.gravity = 0.1; 
             }
             update() {
                 this.x += this.vx;
@@ -297,8 +301,9 @@
         }
 
         function createExplosion(x, y) {
-            const themeColors = ['#ff00ff', '#00e5ff', '#ffffff', '#b300ff'];
-            for (let i = 0; i < 60; i++) {
+            const themeColors = ['#FF0000', '#FFD700', '#C0C0C0', '#0000FF', '#00e5ff', '#ff00ff'];
+            // Increased particle count from 60 to 150 per explosion
+            for (let i = 0; i < 150; i++) {
                 const randomColor = themeColors[Math.floor(Math.random() * themeColors.length)];
                 fwParticles.push(new FireworkParticle(x, y, randomColor));
             }
@@ -308,9 +313,10 @@
             requestAnimationFrame(animateFireworks);
             ctx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
             
-            if (Math.random() < 0.05) {
+            // Increased spawn rate from 5% to 20% per frame
+            if (Math.random() < 0.20) {
                 const randomX = Math.random() * fwCanvas.width;
-                const randomY = Math.random() * (fwCanvas.height * 0.6);
+                const randomY = Math.random() * (fwCanvas.height * 0.8);
                 createExplosion(randomX, randomY);
             }
 
@@ -323,7 +329,10 @@
 
         function startFireworks() {
             fwCanvas.style.display = 'block';
+            // Large initial center blast
             createExplosion(fwCanvas.width / 2, fwCanvas.height / 2);
+            createExplosion(fwCanvas.width / 2 + 50, fwCanvas.height / 2);
+            createExplosion(fwCanvas.width / 2 - 50, fwCanvas.height / 2);
             animateFireworks();
         }
 
