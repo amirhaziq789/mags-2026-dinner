@@ -259,7 +259,7 @@
     // ================= DEADLINE CHECKER =================
     // Set your exact closing date and time here! 
     // Format: "YYYY-MM-DDTHH:MM:SS+08:00" (+08:00 is Malaysia Time)
-    const deadlineString = "2026-05-21T23:59:59+08:00"; 
+    const deadlineString = "2026-05-30T23:59:59+08:00"; 
     
     document.addEventListener("DOMContentLoaded", function() {
         const deadlineDate = new Date(deadlineString);
@@ -276,7 +276,8 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKR1PlD5Z0huoSqDv8dST5ausDRmytKaU-4x-dt4PiBGQHFycPaKa3WdNVmMc7qUNaWA/exec';
     
     // Config
-    const EARLY_BIRD_END_DATE = new Date(2026, 4, 18); 
+    const earlybirdString = "2026-05-21T23:59:59+08:00"; 
+    const EARLY_BIRD_END_DATE = new Date(earlybirdString); 
     const PRICES = {
         STUDENT: { EARLY: 95, NORMAL: 120 },
         ALUMNI: { FIXED: 160 },
