@@ -606,7 +606,11 @@
                 }
             }
             
-            if (isEarlyBird) htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">🔥 Early Bird Active until 21th May 2026!</div>`;
+            if (isEarlyBird) {
+    htmlSub += `<div class="promo-expiry" style="margin-top:5px; border:none; padding-top:0;">
+        🔥 Early bird ends in: <span id="countdownTimer" style="font-weight: bold; color: #ff4757;">Loading...</span>
+    </div>`;
+}
 
             display.innerHTML = htmlMain + `<div class="price-sub">${htmlSub}</div>`;
 
@@ -757,6 +761,34 @@
         document.getElementById('loading').style.display = 'none';
         document.getElementById('registrationSection').style.display = 'block';
     }
+
+    // ================= LIVE COUNTDOWN TIMER =================
+    setInterval(function() {
+        const timerElement = document.getElementById('countdownTimer');
+        
+        // Only run the math if the timer is actually visible on the screen
+        if (timerElement) {
+            const deadlineDate = new Date(deadlineString).getTime();
+            const now = new Date().getTime();
+            const distance = deadlineDate - now;
+
+            // If the countdown is finished
+            if (distance < 0) {
+                timerElement.innerHTML = "EXPIRED";
+                return;
+            }
+
+            // Calculate days, hours, minutes, and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result into the span element
+            timerElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+    }, 1000); // 1000 milliseconds = updates every 1 second
+    // ========================================================
 </script>
 
 </body>
