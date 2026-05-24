@@ -340,7 +340,7 @@
     function updatePaxDropdown(category) {
         const select = document.getElementById('paxSelect');
         select.innerHTML = ''; 
-        let maxPax = (category === 'Student') ? 15 : 2;
+        let maxPax = (category === 'Student') ? 10 : 2;
         for (let i = 1; i <= maxPax; i++) {
             let option = document.createElement('option');
             option.value = i;
