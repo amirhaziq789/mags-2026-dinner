@@ -273,7 +273,7 @@
     });
     
     // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyr734bwkQ_gOhRiRrzQAtB7ZngEtajBSgonlbYhlKtlUL9gNCDLOp4ibErQh3NXgwBQw/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwR_rvwO7EO70PtW70wbWKcZ_byJs7g9iw7KMSyhLtUs63VQsjblsAXBGyYsOMwFYy1WQ/exec';
     
     // Config
     const earlybirdString = "2026-05-21T23:59:59+08:00"; 
@@ -282,7 +282,7 @@
         STUDENT: { EARLY: 60, NORMAL: 60 },
         ALUMNI: { FIXED: 150 },
         AJK: 60,
-        JTK: 60
+        JTK: 30
     };
 
     // --- ID LISTS ---
@@ -312,7 +312,7 @@
         "KEP_ZAINUR_4903", "SUK_AMIR_1730", "KAY_SAKINAH_0173", 
         "KEM_AZIMAH_5320", "DOM_PHITCIT_3743", "KES_HAZIMI_0212", 
         "MUL_AZREEL_5797", "TEK_LAU_4540", "PRO_XU_5298", 
-        "DOK_SARANNYA_4563"
+        "DOK_SARANNYA_4563", "ADAM_001", "QIST_002", "ZAHIN_003", "ACAI_004"
     ];
 
     const validPromoCodes = [...ajkList, ...jtkList];
@@ -595,7 +595,7 @@
             let htmlSub = "";
             
             if (ajkCount > 0) htmlSub += `<div><span class="badge-ajk">AJK x${ajkCount}</span> (RM${PRICES.AJK}/pax)</div>`;
-            if (jtkCount > 0) htmlSub += `<div><span class="badge-ajk">JTK x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
+            if (jtkCount > 0) htmlSub += `<div><span class="badge-ajk">PERFORMER x${jtkCount}</span> (RM${PRICES.JTK}/pax)</div>`;
             
             // MODIFIED: Show slashed per-pax price in the subtext
             if (normalCount > 0) {
