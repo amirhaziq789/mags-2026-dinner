@@ -22,7 +22,6 @@
             background-image: 
                 radial-gradient(circle at 15% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 85% 30%, rgba(0, 229, 255, 0.1) 0%, transparent 50%);
-            /* Prevent pull-to-refresh on mobile */
             touch-action: none; 
         }
 
@@ -60,37 +59,42 @@
             text-shadow: 0 0 5px #ff00ff;
             margin-bottom: 20px;
             font-size: 1.2rem;
+            text-align: center;
             z-index: 10;
         }
 
-        /* --- NEW LAYOUT: DRAG AND DROP ZONES --- */
+        /* --- DRAG AND DROP ZONES LAYOUT --- */
         #game-area {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 2vw;
+            gap: 3vw;
             width: 100vw;
             max-width: 1200px;
             z-index: 10;
         }
 
+        :root {
+            /* Board size responsive to viewport */
+            --board-size: min(45vw, 450px);
+        }
+
         .scatter-zone {
             display: flex;
             flex-wrap: wrap;
-            align-content: flex-start;
+            align-content: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             width: 25vw;
-            height: min(60vw, 500px);
+            min-height: var(--board-size);
             padding: 10px;
+            border: 1px dashed rgba(255, 0, 255, 0.1);
+            border-radius: 10px;
+            background-color: rgba(26, 11, 46, 0.2);
         }
 
         /* --- PUZZLE BOARD --- */
-        :root {
-            --board-size: min(50vw, 450px);
-        }
-
         #board-container {
             width: var(--board-size);
             height: var(--board-size);
@@ -107,7 +111,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 2px;
+            gap: 3px;
             width: 100%;
             height: 100%;
         }
@@ -116,28 +120,38 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 229, 255, 0.05);
-            border: 1px dashed rgba(0, 229, 255, 0.3);
+            border: 1px dashed rgba(0, 229, 255, 0.25);
             border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
         }
 
+        /* --- FIXED FIXED PIECE SIZING --- */
         .piece {
-            width: 100%;
-            height: 100%;
-            background-size: 300% 300%;
+            /* Width and height are exactly locked to 1/3 of the board container */
+            width: calc(var(--board-size) / 3 - 6px);
+            height: calc(var(--board-size) / 3 - 6px);
+            background-size: var(--board-size) var(--board-size);
             cursor: grab;
             border-radius: 5px;
             background-color: #000; 
             touch-action: none;
-            /* To make sizing exact when scattered */
-            flex: 0 0 calc(var(--board-size) / 3 - 4px);
-            aspect-ratio: 1 / 1;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+            transition: box-shadow 0.2s;
+            box-sizing: border-box;
         }
 
         .piece:active {
             cursor: grabbing;
+        }
+
+        /* Ensure piece scales nicely inside the slot grid */
+        .drop-slot .piece {
+            width: 100%;
+            height: 100%;
+            box-shadow: none;
         }
 
         /* --- GIMMICK EXECUTION ANIMATIONS --- */
@@ -152,7 +166,6 @@
             z-index: 10;
         }
 
-        /* Apply seamless state upon win */
         body.time-warp .drop-slot {
             border: none;
             background: transparent;
@@ -161,6 +174,8 @@
         body.time-warp .scatter-zone {
             opacity: 0;
             transition: opacity 0.5s;
+            border-color: transparent;
+            background: transparent;
         }
 
         body.time-warp #board-container {
@@ -178,6 +193,8 @@
 
         body.time-warp .piece {
             border-radius: 0;
+            width: 100%;
+            height: 100%;
         }
 
         body.time-warp #success-message {
@@ -185,7 +202,7 @@
             animation: glitch-text-violent 4s linear forwards, smooth-glitch-text 2s 4s infinite alternate ease-in-out; 
         }
 
-        /* === AGGRESSIVE GLITCH ANIMATIONS === */
+        /* === AGGRESSIVE GLITCH KEYFRAMES === */
         @keyframes intense-glitch {
             0%   { transform: translate(0) skew(0deg) scale(1); filter: hue-rotate(0deg); }
             5%   { transform: translate(-30px, 15px) skew(15deg) scale(1.05); filter: invert(100%) hue-rotate(90deg); box-shadow: -20px 0 0 #ff00ff, 20px 0 0 #00e5ff; }
@@ -271,8 +288,7 @@
         <div id="left-scatter" class="scatter-zone"></div>
         
         <div id="board-container">
-            <div id="puzzle-board">
-                </div>
+            <div id="puzzle-board"></div>
         </div>
 
         <div id="right-scatter" class="scatter-zone"></div>
@@ -294,17 +310,17 @@
         
         let isLocked = false;
         
-        // Dragging Variables
+        // Dragging State Engine
         let activePiece = null;
         let offsetX = 0;
         let offsetY = 0;
         let originalParent = null;
 
         // ==========================================
-        // 2. INITIALIZE THE PUZZLE (SCATTER & DROP)
+        // 2. INITIALIZE THE PUZZLE
         // ==========================================
         function initPuzzle() {
-            // Create empty drop slots in the center board
+            // Generate empty structural slots
             for (let i = 0; i < TOTAL_PIECES; i++) {
                 const slot = document.createElement('div');
                 slot.classList.add('drop-slot');
@@ -312,7 +328,7 @@
                 board.appendChild(slot);
             }
 
-            // Create pieces and randomize them
+            // Slice & Shuffling Array Logic
             let correctOrder = Array.from({length: TOTAL_PIECES}, (_, i) => i);
             let shuffledOrder = [...correctOrder].sort(() => Math.random() - 0.5);
 
@@ -330,10 +346,10 @@
                 piece.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
                 piece.dataset.originalIndex = originalIndex;
                 
-                // Add Pointer Events for Touch & Mouse Compatibility
+                // Active Universal Pointer Handlers
                 piece.addEventListener('pointerdown', handlePointerDown);
                 
-                // Distribute evenly to left and right zones
+                // Distribute cleaner across zones
                 if (i % 2 === 0) {
                     leftScatter.appendChild(piece);
                 } else {
@@ -341,17 +357,16 @@
                 }
             });
 
-            // Global listeners for moving and dropping
             document.addEventListener('pointermove', handlePointerMove);
             document.addEventListener('pointerup', handlePointerUp);
         }
 
         // ==========================================
-        // 3. DRAG AND DROP LOGIC (TOUCH RESPONSIVE)
+        // 3. SECURE DRAG & DROP HANDLING
         // ==========================================
         function handlePointerDown(e) {
             if (isLocked) return;
-            e.preventDefault(); // Stop default touch actions
+            e.preventDefault(); 
 
             activePiece = e.target;
             originalParent = activePiece.parentElement;
@@ -360,7 +375,7 @@
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
 
-            // Make the piece float and attach to body for dragging
+            // Fluid ghost drifting styles overlay
             activePiece.style.width = rect.width + 'px';
             activePiece.style.height = rect.height + 'px';
             activePiece.style.position = 'fixed';
@@ -385,7 +400,6 @@
         function handlePointerUp(e) {
             if (!activePiece || isLocked) return;
 
-            // Hide temporarily to find what element is underneath the cursor
             activePiece.style.display = 'none';
             let elemBelow = document.elementFromPoint(e.clientX, e.clientY);
             activePiece.style.display = 'block';
@@ -393,27 +407,25 @@
             let targetSlot = elemBelow ? elemBelow.closest('.drop-slot') : null;
             let targetScatter = elemBelow ? elemBelow.closest('.scatter-zone') : null;
 
-            // Reset positioning styles
-            activePiece.style.position = 'relative';
-            activePiece.style.left = 'auto';
-            activePiece.style.top = 'auto';
-            activePiece.style.width = '100%';
-            activePiece.style.height = '100%';
+            // Purge float drag state configurations cleanly
+            activePiece.style.position = '';
+            activePiece.style.left = '';
+            activePiece.style.top = '';
+            activePiece.style.width = '';
+            activePiece.style.height = '';
             activePiece.style.zIndex = '10';
-            activePiece.style.boxShadow = 'none';
+            activePiece.style.boxShadow = '';
 
             if (targetSlot) {
-                // If dropping into a slot that already has a piece, swap them!
+                // Swap pieces seamlessly if slot contains an entity
                 if (targetSlot.children.length > 0) {
                     const existingPiece = targetSlot.children[0];
                     originalParent.appendChild(existingPiece);
                 }
                 targetSlot.appendChild(activePiece);
             } else if (targetScatter) {
-                // Dropped back into a scatter zone
                 targetScatter.appendChild(activePiece);
             } else {
-                // Invalid drop, return to where it came from
                 originalParent.appendChild(activePiece);
             }
 
@@ -422,12 +434,11 @@
         }
 
         // ==========================================
-        // 4. THE GIMMICK (WIN CONDITION)
+        // 4. WIN DETECTION SYSTEM
         // ==========================================
         function checkWinCondition() {
             const slots = Array.from(document.querySelectorAll('.drop-slot'));
             
-            // Check if every slot has exactly 1 piece, and its index matches the slot's index
             const isSolved = slots.every((slot, index) => {
                 if (slot.children.length === 0) return false;
                 const piece = slot.children[0];
@@ -441,16 +452,13 @@
 
         function executeGimmick() {
             isLocked = true; 
-            
             document.body.classList.add('time-warp');
             document.getElementById('instruction-text').style.display = 'none';
-
-            // Start Fireworks instantly behind the glitching puzzle
             startFireworks();
         }
 
         // ==========================================
-        // 5. FIREWORKS SYSTEM
+        // 5. INTENSE SYSTEM ENGINE FIREWORKS
         // ==========================================
         const fwCanvas = document.getElementById('fireworks-canvas');
         const ctx = fwCanvas.getContext('2d');
@@ -526,7 +534,6 @@
             animateFireworks();
         }
 
-        // Start the engine
         window.onload = initPuzzle;
     </script>
 </body>
